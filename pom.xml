@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.segal.mongorest</groupId>
+	<artifactId>mongo-rest-parent</artifactId>
+	<packaging>pom</packaging>
+	<version>0.0.1</version>
+	<name>Mongo REST :: Parent</name>
+
+	<properties>				
+		<mongodb.version>2.6.0</mongodb.version>
+		<springframework.version>4.0.3.RELEASE</springframework.version>
+		<spring-security.version>3.2.3.RELEASE</spring-security.version>
+		<spring-data-mongodb.version>1.4.1.RELEASE</spring-data-mongodb.version>
+	</properties>
+
+	<modules>
+		<module>mongo-rest-persistence</module>
+		<module>mongo-rest-web</module>
+	</modules>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.2</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+</project>
