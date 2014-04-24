@@ -11,22 +11,24 @@ import com.segal.mongorest.core.pojo.BaseDocument;
  */
 public class InvalidDocumentTestResult<T extends BaseDocument> extends DocumentTestResult<T> {
 
-	Exception exception;
+	private static final long serialVersionUID = -5722911050556692121L;
+
+	Class<? extends Exception> exceptionClass;
 
 	public InvalidDocumentTestResult() {
 	}
 
-	public InvalidDocumentTestResult(T document, boolean isUpdate, Exception exception) {
+	public InvalidDocumentTestResult(T document, boolean isUpdate, Class<? extends Exception> exceptionClass) {
 		super(document, isUpdate);
-		this.exception = exception;
+		this.exceptionClass = exceptionClass;
 	}
 
-	public Exception getException() {
-		return exception;
+	public Class<? extends Exception> getExceptionClass() {
+		return exceptionClass;
 	}
 
-	public void setException(Exception exception) {
-		this.exception = exception;
+	public void setExceptionClass(Class<? extends Exception> exceptionClass) {
+		this.exceptionClass = exceptionClass;
 	}
 
 }

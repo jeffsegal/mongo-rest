@@ -34,12 +34,9 @@ public class TestRegistry extends ClasspathAndBeanScanner {
 	}
 
 	@Override
-	public void handleBeanEntry(Object bean) {
-		DocumentType annotation = bean.getClass().getAnnotation(DocumentType.class);
-		if (annotation != null) {
-			if (bean instanceof DocumentBuilder) {
-				documentBuilderRegistry.put(annotation.value(), (DocumentBuilder<? extends BaseDocument>) bean);
-			}
+	public void handleBeanEntry(Object bean, String documentType) {
+		if (bean instanceof DocumentBuilder) {
+			documentBuilderRegistry.put(documentType, (DocumentBuilder<? extends BaseDocument>) bean);
 		}
 	}
 
