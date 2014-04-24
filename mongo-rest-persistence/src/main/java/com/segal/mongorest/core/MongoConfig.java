@@ -63,14 +63,6 @@ public abstract class MongoConfig extends AbstractMongoConfiguration {
 	@Autowired
 	MongoTemplate mongoTemplate;
 
-	private DefaultMongoCrudService getMongoService(MongoRepositoryFactoryBean factoryBean,
-	                                            Class<? extends CrudRepository> repositoryInterface) {
-		factoryBean.setMongoOperations(mongoTemplate);
-		factoryBean.setRepositoryInterface(repositoryInterface);
-		factoryBean.afterPropertiesSet();
-		return new DefaultMongoCrudService((CrudRepository) factoryBean.getObject());
-	}
-
 	@Bean
 	public MongoDbFactory mongoDbFactory() throws Exception {
 		return new SimpleMongoDbFactory(mongo, dbname, new UserCredentials(username, password));
@@ -81,8 +73,20 @@ public abstract class MongoConfig extends AbstractMongoConfiguration {
 		return new MongoTemplate(mongoDbFactory());
 	}
 
-	@Bean
 	public abstract MongoOptions mongoOptions();
+
+	public MongoOptions getDefaultMongoOptions() {
+		MongoClientOptions mongoClientOptions = MongoClientOptions.builder()
+				.autoConnectRetry(true)
+				.connectionsPerHost(50)
+				.connectTimeout(1000 * 10)
+				.maxAutoConnectRetryTime(1000 * 60 * 30)
+				.socketFactory(mongoSocketFactory)
+				.socketKeepAlive(true)
+				.socketTimeout(1000 * 60)
+				.build();
+		return new MongoOptions(mongoClientOptions);
+	}
 
 	@Bean
 	public MongoFactoryBean mongoFactoryBean() {
