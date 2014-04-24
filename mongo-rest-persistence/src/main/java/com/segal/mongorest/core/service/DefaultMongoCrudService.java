@@ -25,16 +25,16 @@ public class DefaultMongoCrudService<T extends BaseDocument> implements CrudServ
 	@Autowired
 	BeanValidator beanValidator;
 
-	@Autowired
-	PersistenceListenerManager persistenceListenerManager;
-
+	PersistenceListenerManager<T> persistenceListenerManager;
 	CrudRepository<T, String> crudRepository;
 
 	public DefaultMongoCrudService() {
 	}
 
-	public DefaultMongoCrudService(CrudRepository<T, String> crudRepository) {
+	public DefaultMongoCrudService(CrudRepository<T, String> crudRepository,
+	                               PersistenceListenerManager<T> persistenceListenerManager) {
 		this.crudRepository = crudRepository;
+		this.persistenceListenerManager = persistenceListenerManager;
 	}
 
 	public T update(T pojo) {
