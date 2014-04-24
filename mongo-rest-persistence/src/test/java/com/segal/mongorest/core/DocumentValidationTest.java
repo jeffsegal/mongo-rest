@@ -29,10 +29,21 @@ public class DocumentValidationTest<T extends BaseDocument> {
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	String mockId = "NOT_NULL";
 
-	CrudRepository<T, String> repository;
-	CrudService<T> service;
-	DocumentBuilder<T> documentBuilder;
-	PersistenceListenerManager<T> persistenceListenerManager;
+	protected CrudRepository<T, String> repository;
+	protected CrudService<T> service;
+	protected DocumentBuilder<T> documentBuilder;
+	protected PersistenceListenerManager<T> persistenceListenerManager;
+
+	public DocumentValidationTest() {
+	}
+
+	public DocumentValidationTest(CrudRepository<T, String> repository, CrudService<T> service,
+	                              DocumentBuilder<T> documentBuilder, PersistenceListenerManager<T> persistenceListenerManager) {
+		this.repository = repository;
+		this.service = service;
+		this.documentBuilder = documentBuilder;
+		this.persistenceListenerManager = persistenceListenerManager;
+	}
 
 	@Rule
 	public ExpectedException rule = ExpectedException.none();
@@ -56,7 +67,7 @@ public class DocumentValidationTest<T extends BaseDocument> {
 
 	public void testInvalidSave(InvalidDocumentTestResult<T> result) throws Exception {
 		rule = ExpectedException.none();
-		rule.expect(result.getException().getClass());
+		rule.expect(result.getExceptionClass());
 		service.create((T) result.getDocument());
 	}
 
@@ -89,11 +100,13 @@ public class DocumentValidationTest<T extends BaseDocument> {
 
 	@Test
 	public void testDelete() {
+		log.info("Attempting to delete ID '" + mockId + "'...");
 		doTestDelete(mockId);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidDelete() {
+		log.info("Attempting to delete a null ID...");
 		doTestDelete(null);
 	}
 
@@ -123,4 +136,5 @@ public class DocumentValidationTest<T extends BaseDocument> {
 	public void setPersistenceListenerManager(PersistenceListenerManager<T> persistenceListenerManager) {
 		this.persistenceListenerManager = persistenceListenerManager;
 	}
+
 }
