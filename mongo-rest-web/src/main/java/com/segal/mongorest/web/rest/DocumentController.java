@@ -22,7 +22,7 @@ public class DocumentController<T extends BaseDocument> {
 
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
-	CrudService<T> service;
+	protected CrudService<T> service;
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET, produces = "text/plain")
 	public String test(Principal user) {

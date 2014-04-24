@@ -13,6 +13,8 @@ import org.springframework.test.web.servlet.ResultMatcher;
  */
 public class RestErrorResult<T extends BaseDocument> extends DocumentTestResult<T> {
 
+	private static final long serialVersionUID = -8290138532696665485L;
+
 	ResultMatcher expectation;
 
 	public RestErrorResult() {
