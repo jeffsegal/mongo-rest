@@ -11,6 +11,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  * Time: 10:39 PM
  * To change this template use File | Settings | File Templates.
  */
-@DocumentType("book")
 public interface BookRepository extends PagingAndSortingRepository<Book, String> {
 }

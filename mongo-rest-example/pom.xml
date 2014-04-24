@@ -56,48 +56,7 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<webXml>${basedir}/src/main/webapp/WEB-INF/web.xml</webXml>
-					<archiveClasses>true</archiveClasses>
-					<webResources>
-						<resource>
-							<directory>src/main/resources/</directory>
-							<targetPath>WEB-INF/classes</targetPath>
-						</resource>
-					</webResources>
-				</configuration>
-			</plugin>
 
-			<plugin>
-				<groupId>org.codehaus.cargo</groupId>
-				<artifactId>cargo-maven2-plugin</artifactId>
-				<version>1.4.8</version>
-				<configuration>
-					<container>
-						<containerId>jetty9x</containerId>
-						<home>${jetty.home}</home>
-					</container>
-					<configuration>
-						<home>${jetty.home}</home>
-						<type>standalone</type>
-					</configuration>
-				</configuration>
-			</plugin>
-
-			<!--<plugin>-->
-				<!--<groupId>org.apache.maven.plugins</groupId>-->
-				<!--<artifactId>maven-surefire-plugin</artifactId>-->
-				<!--<version>2.17</version>-->
-				<!--<configuration>-->
-					<!--<excludes>-->
-						<!--<exclude>com/segal/**</exclude>-->
-					<!--</excludes>-->
-				<!--</configuration>-->
-			<!--</plugin>-->
 		</plugins>
 
 		<finalName>${project.artifactId}</finalName>

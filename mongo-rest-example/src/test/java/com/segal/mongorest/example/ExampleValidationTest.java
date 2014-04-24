@@ -3,6 +3,7 @@ package com.segal.mongorest.example;
 import com.segal.mongorest.core.DocumentValidationTest;
 import com.segal.mongorest.core.service.CrudService;
 import com.segal.mongorest.core.service.PersistenceListenerManager;
+import com.segal.mongorest.core.util.ApplicationRegistry;
 import com.segal.mongorest.example.builder.AuthorDocumentBuilder;
 import com.segal.mongorest.example.builder.BookDocumentBuilder;
 import com.segal.mongorest.example.pojo.Author;
@@ -31,12 +32,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = ExampleMockMongoConfig.class)
 @DirtiesContext
+@Deprecated
 public class ExampleValidationTest {
 
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
 	DocumentValidationTest<Author> authorValidationTest;
 	DocumentValidationTest<Book> bookValidationTest;
+
+	@Autowired
+	ApplicationRegistry applicationRegistry;
 
 	@Autowired
 	AuthorRepository authorRepository;

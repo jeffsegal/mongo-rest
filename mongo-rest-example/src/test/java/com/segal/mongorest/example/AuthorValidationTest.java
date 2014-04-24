@@ -3,6 +3,7 @@ package com.segal.mongorest.example;
 import com.segal.mongorest.core.DocumentValidationTest;
 import com.segal.mongorest.core.service.CrudService;
 import com.segal.mongorest.core.service.PersistenceListenerManager;
+import com.segal.mongorest.core.support.DocumentBuilder;
 import com.segal.mongorest.example.builder.AuthorDocumentBuilder;
 import com.segal.mongorest.example.builder.BookDocumentBuilder;
 import com.segal.mongorest.example.pojo.Author;
@@ -15,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -31,29 +33,32 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @DirtiesContext
 public class AuthorValidationTest extends DocumentValidationTest<Author> {
 
-	Logger log = LoggerFactory.getLogger(this.getClass());
-
+	@Override
 	@Autowired
-	AuthorRepository authorRepository;
+	@Qualifier("authorRepository")
+	public void setRepository(CrudRepository repository) {
+		super.setRepository(repository);
+	}
 
+	@Override
 	@Autowired
 	@Qualifier("authorService")
-	CrudService<Author> authorCrudService;
+	public void setService(CrudService<Author> service) {
+		super.setService(service);
+	}
 
+	@Override
 	@Autowired
-	AuthorDocumentBuilder authorDocumentBuilder;
+	@Qualifier("authorDocumentBuilder")
+	public void setDocumentBuilder(DocumentBuilder<Author> documentBuilder) {
+		super.setDocumentBuilder(documentBuilder);
+	}
 
+	@Override
 	@Autowired
-	PersistenceListenerManager<Author> authorPersistenceListenerManager;
-
-	@Before
-	public void init() {
-		log.info("Initializing " + this.getClass());
-		this.setDocumentBuilder(authorDocumentBuilder);
-		this.setPersistenceListenerManager(authorPersistenceListenerManager);
-		this.setRepository(authorRepository);
-		this.setService(authorCrudService);
-		this.testDocuments();
+	@Qualifier("authorPersistenceListenerManager")
+	public void setPersistenceListenerManager(PersistenceListenerManager<Author> persistenceListenerManager) {
+		super.setPersistenceListenerManager(persistenceListenerManager);
 	}
 
 }

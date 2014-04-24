@@ -3,11 +3,12 @@ package com.segal.mongorest.example;
 import com.segal.mongorest.core.DocumentValidationTest;
 import com.segal.mongorest.core.service.CrudService;
 import com.segal.mongorest.core.service.PersistenceListenerManager;
-import com.segal.mongorest.example.builder.AuthorDocumentBuilder;
+import com.segal.mongorest.core.support.DocumentBuilder;
 import com.segal.mongorest.example.builder.BookDocumentBuilder;
-import com.segal.mongorest.example.pojo.Author;
+import com.segal.mongorest.example.builder.BookDocumentBuilder;
 import com.segal.mongorest.example.pojo.Book;
-import com.segal.mongorest.example.repository.AuthorRepository;
+import com.segal.mongorest.example.pojo.Book;
+import com.segal.mongorest.example.repository.BookRepository;
 import com.segal.mongorest.example.repository.BookRepository;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -15,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -31,29 +33,32 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @DirtiesContext
 public class BookValidationTest extends DocumentValidationTest<Book> {
 
-	Logger log = LoggerFactory.getLogger(this.getClass());
-
+	@Override
 	@Autowired
-	BookRepository bookRepository;
+	@Qualifier("bookRepository")
+	public void setRepository(CrudRepository repository) {
+		super.setRepository(repository);
+	}
 
+	@Override
 	@Autowired
 	@Qualifier("bookService")
-	CrudService<Book> bookCrudService;
+	public void setService(CrudService<Book> service) {
+		super.setService(service);
+	}
 
+	@Override
 	@Autowired
-	BookDocumentBuilder bookDocumentBuilder;
+	@Qualifier("bookDocumentBuilder")
+	public void setDocumentBuilder(DocumentBuilder<Book> documentBuilder) {
+		super.setDocumentBuilder(documentBuilder);
+	}
 
+	@Override
 	@Autowired
-	PersistenceListenerManager<Book> bookPersistenceListenerManager;
-
-	@Before
-	public void init() {
-		log.info("Initializing " + this.getClass());
-		this.setDocumentBuilder(bookDocumentBuilder);
-		this.setPersistenceListenerManager(bookPersistenceListenerManager);
-		this.setRepository(bookRepository);
-		this.setService(bookCrudService);
-		this.testDocuments();
+	@Qualifier("bookPersistenceListenerManager")
+	public void setPersistenceListenerManager(PersistenceListenerManager<Book> persistenceListenerManager) {
+		super.setPersistenceListenerManager(persistenceListenerManager);
 	}
 
 }

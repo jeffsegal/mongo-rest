@@ -3,6 +3,7 @@ package com.segal.mongorest.example;
 import com.mongodb.MongoOptions;
 import com.segal.mongorest.core.DocumentValidationTest;
 import com.segal.mongorest.core.MongoConfig;
+import com.segal.mongorest.core.annotation.DocumentType;
 import com.segal.mongorest.core.pojo.BaseDocument;
 import com.segal.mongorest.core.service.DefaultMongoCrudService;
 import com.segal.mongorest.core.service.PersistenceListener;
@@ -53,16 +54,7 @@ public class ExampleMockMongoConfig extends MongoConfig implements PersistenceLi
 	PersistenceListenerManager<Book> bookPersistenceListenerManager;
 
 	@Bean
-	public AuthorDocumentBuilder authorDocumentBuilder() {
-		return new AuthorDocumentBuilder();
-	}
-
-	@Bean
-	public BookDocumentBuilder bookDocumentBuilder() {
-		return new BookDocumentBuilder();
-	}
-
-	@Bean
+	@DocumentType("author")
 	public PersistenceListenerManager<Author> authorPersistenceListenerManager() {
 		PersistenceListenerManager manager = new PersistenceListenerManager<>();
 		manager.addPersistenceListener(this);
@@ -70,6 +62,7 @@ public class ExampleMockMongoConfig extends MongoConfig implements PersistenceLi
 	}
 
 	@Bean
+	@DocumentType("book")
 	public PersistenceListenerManager<Book> bookPersistenceListenerManager() {
 		PersistenceListenerManager manager = new PersistenceListenerManager<>();
 		manager.addPersistenceListener(this);
@@ -78,12 +71,14 @@ public class ExampleMockMongoConfig extends MongoConfig implements PersistenceLi
 
 	@Bean
 	@Qualifier("authorService")
+	@DocumentType("author")
 	public DefaultMongoCrudService<Author> authorService() {
 		return getMongoService(authorRepository, authorPersistenceListenerManager);
 	}
 
 	@Bean
 	@Qualifier("bookService")
+	@DocumentType("book")
 	public DefaultMongoCrudService<Book> bookService() {
 		return getMongoService(bookRepository, bookPersistenceListenerManager);
 	}
@@ -94,11 +89,13 @@ public class ExampleMockMongoConfig extends MongoConfig implements PersistenceLi
 	}
 
 	@Bean
+	@DocumentType("author")
 	AuthorRepository authorRepository() {
 		return createNiceMock(AuthorRepository.class);
 	}
 
 	@Bean
+	@DocumentType("book")
 	BookRepository bookRepository() {
 		return createNiceMock(BookRepository.class);
 	}
@@ -116,11 +113,11 @@ public class ExampleMockMongoConfig extends MongoConfig implements PersistenceLi
 
 	@Override
 	public void documentUpdated(BaseDocument pojo) {
-		// no-op
+		log.info("document updated");
 	}
 
 	@Override
 	public void documentDeleted(String id) {
-		// no-op
+		log.info("document deleted");
 	}
 }
