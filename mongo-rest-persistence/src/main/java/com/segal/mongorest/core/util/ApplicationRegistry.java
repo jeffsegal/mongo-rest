@@ -2,25 +2,16 @@ package com.segal.mongorest.core.util;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.google.common.collect.Lists;
 import com.segal.mongorest.core.annotation.DocumentType;
 import com.segal.mongorest.core.pojo.BaseDocument;
 import com.segal.mongorest.core.service.CrudService;
 import com.segal.mongorest.core.service.PersistenceListenerManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -61,7 +52,7 @@ public class ApplicationRegistry extends ClasspathAndBeanScanner {
 		if (annotation != null) {
 			if (annotation.value() != null) {
 				if (BaseDocument.class.isAssignableFrom(clazz)) {
-					log.debug("Mapping '" + annotation.value() + "' to " + BaseDocument.class.getSimpleName() +
+					log.info("Mapping '" + annotation.value() + "' to " + BaseDocument.class.getSimpleName() +
 							" '" + clazz.getCanonicalName() + "'");
 					documentRegistry.put(annotation.value(), clazz);
 				}
@@ -70,19 +61,16 @@ public class ApplicationRegistry extends ClasspathAndBeanScanner {
 	}
 
 	@Override
-	public void handleBeanEntry(Object bean) {
-		DocumentType annotation = bean.getClass().getAnnotation(DocumentType.class);
-		if (annotation != null) {
-			log.debug("Mapping '" + annotation.value() + "' to bean '" + bean.getClass().getCanonicalName() + "'");
-			if (bean instanceof CrudRepository) {
-				crudRepositoryRegistry.put(annotation.value(), (CrudRepository<? extends BaseDocument, String>) bean);
-			}
-			else if (bean instanceof CrudService) {
-				crudServiceRegistry.put(annotation.value(), (CrudService<? extends BaseDocument>) bean);
-			}
-			else if (bean instanceof PersistenceListenerManager) {
-				persistenceListenerManagerRegistry.put(annotation.value(), (PersistenceListenerManager<? extends BaseDocument>) bean);
-			}
+	public void handleBeanEntry(Object bean, String documentType) {
+		log.info("Mapping '" + documentType + "' to bean '" + bean.getClass().getCanonicalName() + "'");
+		if (bean instanceof CrudRepository) {
+			crudRepositoryRegistry.put(documentType, (CrudRepository<? extends BaseDocument, String>) bean);
+		}
+		else if (bean instanceof CrudService) {
+			crudServiceRegistry.put(documentType, (CrudService<? extends BaseDocument>) bean);
+		}
+		else if (bean instanceof PersistenceListenerManager) {
+			persistenceListenerManagerRegistry.put(documentType, (PersistenceListenerManager<? extends BaseDocument>) bean);
 		}
 	}
 

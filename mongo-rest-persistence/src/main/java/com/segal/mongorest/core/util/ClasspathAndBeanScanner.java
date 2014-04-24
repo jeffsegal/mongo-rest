@@ -1,18 +1,20 @@
 package com.segal.mongorest.core.util;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.segal.mongorest.core.annotation.DocumentType;
-import com.segal.mongorest.core.pojo.BaseDocument;
-import com.segal.mongorest.core.service.CrudService;
-import com.segal.mongorest.core.service.PersistenceListenerManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.type.StandardMethodMetadata;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
-import org.springframework.data.repository.CrudRepository;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +37,7 @@ public abstract class ClasspathAndBeanScanner {
 
 	public abstract void handleClasspathEntry(Class clazz);
 
-	public abstract void handleBeanEntry(Object bean);
+	public abstract void handleBeanEntry(Object bean, String documentType);
 
 	protected ClasspathAndBeanScanner() {
 	}
@@ -63,12 +65,48 @@ public abstract class ClasspathAndBeanScanner {
 	protected void scanBeans() {
 		log.info("Scanning bean instances to build registries...");
 		Map<String, Object> beans = applicationContext.getBeansWithAnnotation(DocumentType.class);
+
+		// Look in declared Bean classes
 		for (Map.Entry<String, Object> entry : beans.entrySet()) {
 			String name = entry.getKey();
 			Object bean = entry.getValue();
 			log.trace("Looking for '" + DocumentType.class + "' annotation on class '" + bean.getClass() + "'");
-			handleBeanEntry(bean);
+			DocumentType annotation = bean.getClass().getAnnotation(DocumentType.class);
+			if (annotation != null) {
+				handleBeanEntry(bean, annotation.value());
+			}
 		}
+
+		// Look in @Bean objects
+		Map<String, Map<String, Object>> beanAnnotationAttributes = getBeansWithAnnotation(DocumentType.class, null);
+		for (Map.Entry<String, Map<String, Object>> entry : beanAnnotationAttributes.entrySet()) {
+			String name = entry.getKey();
+			Map<String, Object> attributes = entry.getValue();
+			Object bean = applicationContext.getBean(name);
+			String documentType = (String) attributes.get("value");
+			handleBeanEntry(bean, documentType);
+		}
+	}
+
+	public Map<String, Map<String, Object>> getBeansWithAnnotation(Class<? extends Annotation> type,
+	                                           Predicate<Map<String, Object>> attributeFilter) {
+		Map<String, Map<String, Object>> result = Maps.newConcurrentMap();
+		ConfigurableListableBeanFactory factory = (ConfigurableListableBeanFactory)
+				applicationContext.getAutowireCapableBeanFactory();
+		for (String name : factory.getBeanDefinitionNames()) {
+			BeanDefinition bd = factory.getBeanDefinition(name);
+			if (bd.getSource() instanceof StandardMethodMetadata) {
+				StandardMethodMetadata metadata = (StandardMethodMetadata) bd.getSource();
+				Map<String, Object> attributes = metadata.getAnnotationAttributes(type.getName());
+				if (null == attributes) {
+					continue;
+				}
+				if (attributeFilter == null || attributeFilter.apply(attributes)) {
+					result.put(name, attributes);
+				}
+			}
+		}
+		return result;
 	}
 
 	public void setPackages(List<String> packages) {
