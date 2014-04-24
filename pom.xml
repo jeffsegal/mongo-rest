@@ -19,6 +19,7 @@
 	<modules>
 		<module>mongo-rest-persistence</module>
 		<module>mongo-rest-web</module>
+		<module>mongo-rest-example</module>
 	</modules>
 
 	<dependencies>
@@ -39,5 +40,19 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.7</source>
+						<target>1.7</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 
 </project>
