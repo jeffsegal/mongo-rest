@@ -87,18 +87,6 @@ public class ExampleMockMongoConfig extends MongoConfig implements PersistenceLi
 		return new DefaultMongoCrudService(crudRepository, persistenceListenerManager, createNiceMock(TimeProvider.class));
 	}
 
-//	@Bean
-//	@DocumentType("author")
-//	AuthorRepository authorRepository() {
-//		return createNiceMock(AuthorRepository.class);
-//	}
-//
-//	@Bean
-//	@DocumentType("book")
-//	BookRepository bookRepository() {
-//		return createNiceMock(BookRepository.class);
-//	}
-
 	@Bean
 	@Override
 	public MongoOptions mongoOptions() {

@@ -26,11 +26,6 @@ import javax.annotation.PostConstruct;
 @ContextConfiguration(classes = ExampleMockRestConfig.class)
 public class BookControllerTest extends DocumentControllerTest<Book> {
 
-	@PostConstruct
-	public void init() {
-		setBaseUrl("/" + Book.class.getSimpleName().toLowerCase());
-	}
-
 	@Override
 	@Autowired
 	@Qualifier("bookControllerDocumentProvider")

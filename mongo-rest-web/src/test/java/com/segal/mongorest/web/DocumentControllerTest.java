@@ -1,6 +1,7 @@
 package com.segal.mongorest.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.reflect.TypeToken;
 import com.segal.mongorest.core.pojo.BaseDocument;
 import com.segal.mongorest.core.support.DocumentProvider;
 import com.segal.mongorest.core.support.DocumentTestResult;
@@ -20,6 +21,8 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.security.Principal;
 import java.util.Collection;
 
@@ -50,9 +53,16 @@ public class DocumentControllerTest<T extends BaseDocument> {
 	protected Principal principal = new UsernamePasswordAuthenticationToken("joeUser", "secret");
 	protected String baseUrl;
 
+	final TypeToken<T> typeToken = new TypeToken<T>(getClass()) {};
+	final Type type = typeToken.getType();
+
 	@Before
 	public void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		if (baseUrl == null && type instanceof Class) {
+			Class clazz = (Class) type;
+			baseUrl = "/" + clazz.getSimpleName().toLowerCase();
+		}
 	}
 
 	@Test
@@ -77,12 +87,10 @@ public class DocumentControllerTest<T extends BaseDocument> {
 				String url = "/" + documentType;
 				if (DocumentTestResult.Operation.create.equals(restErrorResult.getOperation())) {
 					doCreate(url, (T) restErrorResult.getDocument(), restErrorResult.getExpectation());
-				}
-				else if (DocumentTestResult.Operation.update.equals(restErrorResult.getOperation())) {
+				} else if (DocumentTestResult.Operation.update.equals(restErrorResult.getOperation())) {
 					doUpdate(url + "/" + restErrorResult.getDocument().getId(), (T) restErrorResult.getDocument(),
 							restErrorResult.getExpectation());
-				}
-				else if (DocumentTestResult.Operation.find.equals(restErrorResult.getOperation())) {
+				} else if (DocumentTestResult.Operation.find.equals(restErrorResult.getOperation())) {
 					doGet(url + "/" + restErrorResult.getDocument().getId(), restErrorResult.getDocument().getId(),
 							(T) restErrorResult.getDocument(), restErrorResult.getExpectation());
 				}
