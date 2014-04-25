@@ -9,6 +9,7 @@ See mongo-rest-example for usage examples of how to create POJOs, Repositories, 
 Here's how we might represent an author (constructors, getters and setters omitted):
 
 ```java
+@Document
 @DocumentType("author")
 public class Author extends BaseDocument {
 
