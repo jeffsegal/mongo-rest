@@ -4,6 +4,7 @@ import com.segal.mongorest.core.annotation.DocumentType;
 import com.segal.mongorest.core.pojo.BaseDocument;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
@@ -14,6 +15,7 @@ import java.util.Date;
  * Time: 10:38 PM
  * To change this template use File | Settings | File Templates.
  */
+@Document
 @DocumentType("book")
 public class Book extends BaseDocument {
 
