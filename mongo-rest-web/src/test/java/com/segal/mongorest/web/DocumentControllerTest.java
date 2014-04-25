@@ -1,20 +1,18 @@
 package com.segal.mongorest.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.segal.mongorest.core.support.DocumentBuilder;
 import com.segal.mongorest.core.pojo.BaseDocument;
+import com.segal.mongorest.core.support.DocumentProvider;
 import com.segal.mongorest.core.support.DocumentTestResult;
 import com.segal.mongorest.core.util.ApplicationRegistry;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
@@ -25,12 +23,9 @@ import org.springframework.web.context.WebApplicationContext;
 import java.security.Principal;
 import java.util.Collection;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.easymock.EasyMock.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,13 +39,16 @@ public class DocumentControllerTest<T extends BaseDocument> {
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	ApplicationRegistry applicationRegistry;
+	protected ApplicationRegistry applicationRegistry;
 
-	DocumentBuilder<T> documentBuilder;
-	WebApplicationContext wac;
-	MockMvc mockMvc;
-	Principal principal;
-	String baseUrl;
+	@Autowired
+	protected WebApplicationContext wac;
+
+	protected CrudRepository<T, String> crudRepository;
+	protected DocumentProvider<T> documentProvider;
+	protected MockMvc mockMvc;
+	protected Principal principal = new UsernamePasswordAuthenticationToken("joeUser", "secret");
+	protected String baseUrl;
 
 	@Before
 	public void setup() {
@@ -59,7 +57,9 @@ public class DocumentControllerTest<T extends BaseDocument> {
 
 	@Test
 	public void test() throws Exception {
-		MvcResult result = this.mockMvc.perform(get(baseUrl + "/test")
+		String url = baseUrl + "/test";
+		log.info("Executing request against URL '" + url + "'");
+		MvcResult result = this.mockMvc.perform(get(url)
 				.principal(principal))
 				.andExpect(status().isOk())
 				.andReturn();
@@ -68,31 +68,41 @@ public class DocumentControllerTest<T extends BaseDocument> {
 
 	@Test
 	public void testSaveDocuments() throws Exception {
-		Collection<DocumentTestResult<T>> results = documentBuilder.createDocuments();
+		Collection<DocumentTestResult<T>> results = documentProvider.createDocuments();
 		for (DocumentTestResult result : results) {
 			if (result instanceof RestErrorResult) {
 				RestErrorResult restErrorResult = (RestErrorResult) result;
-				String documentType = applicationRegistry.getDocumentType(restErrorResult.getClass());
-				// Assume that documentType == base URL for controller
-				if (restErrorResult.isUpdate()) {
-					doUpdate(documentType, (T) restErrorResult.getDocument(), restErrorResult.getExpectation());
+				String documentType = applicationRegistry.getDocumentType(restErrorResult.getDocument().getClass());
+				// Assume that /documentType == base URL for controller
+				String url = "/" + documentType;
+				if (DocumentTestResult.Operation.create.equals(restErrorResult.getOperation())) {
+					doCreate(url, (T) restErrorResult.getDocument(), restErrorResult.getExpectation());
 				}
-				else {
-					doCreate(documentType, (T) restErrorResult.getDocument(), restErrorResult.getExpectation());
+				else if (DocumentTestResult.Operation.update.equals(restErrorResult.getOperation())) {
+					doUpdate(url + "/" + restErrorResult.getDocument().getId(), (T) restErrorResult.getDocument(),
+							restErrorResult.getExpectation());
+				}
+				else if (DocumentTestResult.Operation.find.equals(restErrorResult.getOperation())) {
+					doGet(url + "/" + restErrorResult.getDocument().getId(), restErrorResult.getDocument().getId(),
+							(T) restErrorResult.getDocument(), restErrorResult.getExpectation());
 				}
 			}
 		}
 	}
 
-	private void doCreate(String url, T document, ResultMatcher resultMatcher) throws Exception {
+	protected void doCreate(String url, T document, ResultMatcher resultMatcher) throws Exception {
+		resetToNice(crudRepository);
+		expect(crudRepository.save((document))).andReturn(document).anyTimes();
+		replay(crudRepository);
 		doSave(post(url), document, resultMatcher);
+		verify(crudRepository);
 	}
 
-	private void doUpdate(String url, T document, ResultMatcher resultMatcher) throws Exception {
+	protected void doUpdate(String url, T document, ResultMatcher resultMatcher) throws Exception {
 		doSave(put(url), document, resultMatcher);
 	}
 
-	private void doSave(MockHttpServletRequestBuilder builder, T document, ResultMatcher resultMatcher) throws Exception {
+	protected void doSave(MockHttpServletRequestBuilder builder, T document, ResultMatcher resultMatcher) throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(document);
 		MvcResult result = this.mockMvc.perform(builder
@@ -101,27 +111,37 @@ public class DocumentControllerTest<T extends BaseDocument> {
 				.content(json))
 				.andExpect(resultMatcher)
 				.andReturn();
+		log.info("Executed request against URL '" + result.getRequest().getPathInfo() + "'");
 		log.debug("Response: " + result.getResponse().getContentAsString());
 	}
 
-//	private void doGet(String url) throws Exception {
-//		this.mockMvc.perform(get(url)
-//				.principal(principal)
-//				.accept(MediaType.APPLICATION_JSON))
-//		            .andExpect(status().isOk())
-//		            .andExpect(content().contentType("application/json"))
-//		            .andExpect(jsonPath("$.name").value("Lee"));
-//
-//		MvcResult result = this.mockMvc.perform(get(url)
-//				.principal(principal)
-//				.accept(MediaType.APPLICATION_JSON)
-//				.andExpect(resultMatcher)
-//				.andReturn());
-//		log.debug("Response: " + result.getResponse().getContentAsString());
-//	}
+	private void doGet(String url, String id, T document, ResultMatcher resultMatcher) throws Exception {
+		resetToNice(crudRepository);
+		expect(crudRepository.findOne((id))).andReturn(document).anyTimes();
+		replay(crudRepository);
 
-	public void setDocumentBuilder(DocumentBuilder<T> documentBuilder) {
-		this.documentBuilder = documentBuilder;
+		MvcResult result = this.mockMvc.perform(get(url)
+				.principal(principal)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(resultMatcher)
+				.andReturn();
+		log.debug("Response: " + result.getResponse().getContentAsString());
+		verify(crudRepository);
 	}
 
+	public void setDocumentProvider(DocumentProvider<T> documentProvider) {
+		this.documentProvider = documentProvider;
+	}
+
+	public void setCrudRepository(CrudRepository<T, String> crudRepository) {
+		this.crudRepository = crudRepository;
+	}
+
+	public void setBaseUrl(String baseUrl) {
+		this.baseUrl = baseUrl;
+	}
+
+	public void setPrincipal(Principal principal) {
+		this.principal = principal;
+	}
 }

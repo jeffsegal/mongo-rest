@@ -29,8 +29,8 @@ public class RestErrorResult<T extends BaseDocument> extends DocumentTestResult<
 		this.expectation = expectation;
 	}
 
-	public RestErrorResult(T document, boolean isUpdate, ResultMatcher expectation) {
-		super(document, isUpdate);
+	public RestErrorResult(T document, Operation operation, ResultMatcher expectation) {
+		super(document, operation);
 		this.expectation = expectation;
 	}
 
