@@ -21,7 +21,7 @@ import java.util.Map;
  * Time: 11:48 AM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class BaseDocument implements Serializable {
+public abstract class BaseDocument implements Cloneable, Serializable {
 
 	private static final long serialVersionUID = -6777426265591642262L;
 
@@ -59,4 +59,10 @@ public abstract class BaseDocument implements Serializable {
 	public void setLastUpdatedMillis(long lastUpdatedMillis) {
 		this.lastUpdatedMillis = lastUpdatedMillis;
 	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
 }
