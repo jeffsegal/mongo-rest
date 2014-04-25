@@ -11,7 +11,7 @@ import java.util.Collection;
  * Time: 6:28 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface DocumentBuilder<T extends BaseDocument> {
+public interface DocumentProvider<T extends BaseDocument> {
 
 	Collection<DocumentTestResult<T>> createDocuments();
 

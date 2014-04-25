@@ -11,11 +11,13 @@ import com.segal.mongorest.core.pojo.BaseDocument;
  */
 public class ValidDocumentTestResult<T extends BaseDocument> extends DocumentTestResult<T> {
 
+	private static final long serialVersionUID = -1312286096241020417L;
+
 	public ValidDocumentTestResult() {
 	}
 
-	public ValidDocumentTestResult(T document, boolean isUpdate) {
-		super(document, isUpdate);
+	public ValidDocumentTestResult(T document, Operation operation) {
+		super(document, operation);
 	}
 
 }

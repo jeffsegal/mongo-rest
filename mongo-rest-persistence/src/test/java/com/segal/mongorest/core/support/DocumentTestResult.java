@@ -13,8 +13,12 @@ import java.io.Serializable;
  */
 public class DocumentTestResult<T extends BaseDocument> implements Serializable {
 
+	private static final long serialVersionUID = 6257906885431708055L;
+
 	protected T document;
-	protected boolean isUpdate = false;
+	protected Operation operation;
+
+	public enum Operation {find, create, update}
 
 	public DocumentTestResult() {
 	}
@@ -23,9 +27,9 @@ public class DocumentTestResult<T extends BaseDocument> implements Serializable 
 		this.document = document;
 	}
 
-	public DocumentTestResult(T document, boolean isUpdate) {
+	public DocumentTestResult(T document, Operation operation) {
 		this.document = document;
-		this.isUpdate = isUpdate;
+		this.operation = operation;
 	}
 
 	public T getDocument() {
@@ -36,12 +40,12 @@ public class DocumentTestResult<T extends BaseDocument> implements Serializable 
 		this.document = document;
 	}
 
-	public boolean isUpdate() {
-		return isUpdate;
+	public Operation getOperation() {
+		return operation;
 	}
 
-	public void setUpdate(boolean update) {
-		isUpdate = update;
+	public void setOperation(Operation operation) {
+		this.operation = operation;
 	}
 
 }

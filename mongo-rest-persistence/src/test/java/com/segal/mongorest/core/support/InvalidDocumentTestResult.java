@@ -18,8 +18,8 @@ public class InvalidDocumentTestResult<T extends BaseDocument> extends DocumentT
 	public InvalidDocumentTestResult() {
 	}
 
-	public InvalidDocumentTestResult(T document, boolean isUpdate, Class<? extends Exception> exceptionClass) {
-		super(document, isUpdate);
+	public InvalidDocumentTestResult(T document, Operation operation, Class<? extends Exception> exceptionClass) {
+		super(document, operation);
 		this.exceptionClass = exceptionClass;
 	}
 
