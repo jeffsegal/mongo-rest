@@ -2,6 +2,7 @@ package com.segal.mongorest.example.pojo;
 
 import com.segal.mongorest.core.annotation.DocumentType;
 import com.segal.mongorest.core.pojo.BaseDocument;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.Date;
@@ -69,4 +70,40 @@ public class Book extends BaseDocument {
 	public void setPublicationDate(Date publicationDate) {
 		this.publicationDate = publicationDate;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Book book = (Book) o;
+
+		if (isbn != null ? !isbn.equals(book.isbn) : book.isbn != null) return false;
+		if (publicationDate != null ? !publicationDate.equals(book.publicationDate) : book.publicationDate != null)
+			return false;
+		if (publisher != null ? !publisher.equals(book.publisher) : book.publisher != null) return false;
+		if (title != null ? !title.equals(book.title) : book.title != null) return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = title != null ? title.hashCode() : 0;
+		result = 31 * result + (isbn != null ? isbn.hashCode() : 0);
+		result = 31 * result + (publisher != null ? publisher.hashCode() : 0);
+		result = 31 * result + (publicationDate != null ? publicationDate.hashCode() : 0);
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this)
+				.append("title", title)
+				.append("isbn", isbn)
+				.append("publisher", publisher)
+				.append("publicationDate", publicationDate)
+				.toString();
+	}
+
 }

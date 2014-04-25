@@ -2,6 +2,7 @@ package com.segal.mongorest.example.pojo;
 
 import com.segal.mongorest.core.annotation.DocumentType;
 import com.segal.mongorest.core.pojo.BaseDocument;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -82,4 +83,47 @@ public class Author extends BaseDocument {
 	public void setDeathDate(Date deathDate) {
 		this.deathDate = deathDate;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Author author = (Author) o;
+
+		if (birthDate != null ? !birthDate.equals(author.birthDate) : author.birthDate != null) return false;
+		if (deathDate != null ? !deathDate.equals(author.deathDate) : author.deathDate != null) return false;
+		if (firstName != null ? !firstName.equals(author.firstName) : author.firstName != null) return false;
+		if (lastName != null ? !lastName.equals(author.lastName) : author.lastName != null) return false;
+		if (middleName != null ? !middleName.equals(author.middleName) : author.middleName != null) return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = firstName != null ? firstName.hashCode() : 0;
+		result = 31 * result + (middleName != null ? middleName.hashCode() : 0);
+		result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+		result = 31 * result + (birthDate != null ? birthDate.hashCode() : 0);
+		result = 31 * result + (deathDate != null ? deathDate.hashCode() : 0);
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this)
+				.append("firstName", firstName)
+				.append("middleName", middleName)
+				.append("lastName", lastName)
+				.append("birthDate", birthDate)
+				.append("deathDate", deathDate)
+				.toString();
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
 }
