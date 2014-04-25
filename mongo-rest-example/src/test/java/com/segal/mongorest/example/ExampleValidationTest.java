@@ -4,15 +4,13 @@ import com.segal.mongorest.core.DocumentValidationTest;
 import com.segal.mongorest.core.service.CrudService;
 import com.segal.mongorest.core.service.PersistenceListenerManager;
 import com.segal.mongorest.core.util.ApplicationRegistry;
-import com.segal.mongorest.example.builder.AuthorDocumentBuilder;
-import com.segal.mongorest.example.builder.BookDocumentBuilder;
+import com.segal.mongorest.example.builder.AuthorDocumentProvider;
+import com.segal.mongorest.example.builder.BookDocumentProvider;
 import com.segal.mongorest.example.pojo.Author;
 import com.segal.mongorest.example.pojo.Book;
 import com.segal.mongorest.example.repository.AuthorRepository;
 import com.segal.mongorest.example.repository.BookRepository;
 import org.junit.Test;
-import org.junit.runner.Computer;
-import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,10 +56,10 @@ public class ExampleValidationTest {
 	CrudService<Book> bookCrudService;
 
 	@Autowired
-	AuthorDocumentBuilder authorDocumentBuilder;
+	AuthorDocumentProvider authorDocumentBuilder;
 
 	@Autowired
-	BookDocumentBuilder bookDocumentBuilder;
+	BookDocumentProvider bookDocumentBuilder;
 
 	@Autowired
 	PersistenceListenerManager<Author> authorPersistenceListenerManager;
@@ -72,7 +70,7 @@ public class ExampleValidationTest {
 	@Test
 	public void test() {
 		authorValidationTest = new DocumentValidationTest<>();
-		authorValidationTest.setDocumentBuilder(authorDocumentBuilder);
+		authorValidationTest.setDocumentProvider(authorDocumentBuilder);
 		authorValidationTest.setPersistenceListenerManager(authorPersistenceListenerManager);
 		authorValidationTest.setRepository(authorRepository);
 		authorValidationTest.setService(authorCrudService);

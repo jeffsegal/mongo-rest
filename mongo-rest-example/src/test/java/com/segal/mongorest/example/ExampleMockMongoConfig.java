@@ -1,15 +1,13 @@
 package com.segal.mongorest.example;
 
 import com.mongodb.MongoOptions;
-import com.segal.mongorest.core.DocumentValidationTest;
 import com.segal.mongorest.core.MongoConfig;
 import com.segal.mongorest.core.annotation.DocumentType;
 import com.segal.mongorest.core.pojo.BaseDocument;
 import com.segal.mongorest.core.service.DefaultMongoCrudService;
 import com.segal.mongorest.core.service.PersistenceListener;
 import com.segal.mongorest.core.service.PersistenceListenerManager;
-import com.segal.mongorest.example.builder.AuthorDocumentBuilder;
-import com.segal.mongorest.example.builder.BookDocumentBuilder;
+import com.segal.mongorest.core.util.TimeProvider;
 import com.segal.mongorest.example.pojo.Author;
 import com.segal.mongorest.example.pojo.Book;
 import com.segal.mongorest.example.repository.AuthorRepository;
@@ -36,7 +34,8 @@ import static org.easymock.EasyMock.createNiceMock;
 		basePackages = {"com.segal"},
 		excludeFilters = {
 				@ComponentScan.Filter(type = FilterType.ANNOTATION, value = Configuration.class)})
-@PropertySource("mongorest.properties")
+@Import(MockRepositoryConfig.class)
+@PropertySource("classpath:mongorest.properties")
 public class ExampleMockMongoConfig extends MongoConfig implements PersistenceListener {
 
 	Logger log = LoggerFactory.getLogger(this.getClass());
@@ -85,20 +84,20 @@ public class ExampleMockMongoConfig extends MongoConfig implements PersistenceLi
 
 	private DefaultMongoCrudService getMongoService(CrudRepository crudRepository,
 	                                                PersistenceListenerManager persistenceListenerManager) {
-		return new DefaultMongoCrudService(crudRepository, persistenceListenerManager);
+		return new DefaultMongoCrudService(crudRepository, persistenceListenerManager, createNiceMock(TimeProvider.class));
 	}
 
-	@Bean
-	@DocumentType("author")
-	AuthorRepository authorRepository() {
-		return createNiceMock(AuthorRepository.class);
-	}
-
-	@Bean
-	@DocumentType("book")
-	BookRepository bookRepository() {
-		return createNiceMock(BookRepository.class);
-	}
+//	@Bean
+//	@DocumentType("author")
+//	AuthorRepository authorRepository() {
+//		return createNiceMock(AuthorRepository.class);
+//	}
+//
+//	@Bean
+//	@DocumentType("book")
+//	BookRepository bookRepository() {
+//		return createNiceMock(BookRepository.class);
+//	}
 
 	@Bean
 	@Override

@@ -1,19 +1,12 @@
-package com.segal.mongorest.example;
+package com.segal.mongorest.example.persistence;
 
 import com.segal.mongorest.core.DocumentValidationTest;
 import com.segal.mongorest.core.service.CrudService;
 import com.segal.mongorest.core.service.PersistenceListenerManager;
-import com.segal.mongorest.core.support.DocumentBuilder;
-import com.segal.mongorest.example.builder.AuthorDocumentBuilder;
-import com.segal.mongorest.example.builder.BookDocumentBuilder;
-import com.segal.mongorest.example.pojo.Author;
+import com.segal.mongorest.core.support.DocumentProvider;
+import com.segal.mongorest.example.ExampleMockMongoConfig;
 import com.segal.mongorest.example.pojo.Book;
-import com.segal.mongorest.example.repository.AuthorRepository;
-import com.segal.mongorest.example.repository.BookRepository;
-import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
@@ -31,33 +24,33 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = ExampleMockMongoConfig.class)
 @DirtiesContext
-public class AuthorValidationTest extends DocumentValidationTest<Author> {
+public class BookValidationTest extends DocumentValidationTest<Book> {
 
 	@Override
 	@Autowired
-	@Qualifier("authorRepository")
+	@Qualifier("bookRepository")
 	public void setRepository(CrudRepository repository) {
 		super.setRepository(repository);
 	}
 
 	@Override
 	@Autowired
-	@Qualifier("authorService")
-	public void setService(CrudService<Author> service) {
+	@Qualifier("bookService")
+	public void setService(CrudService<Book> service) {
 		super.setService(service);
 	}
 
 	@Override
 	@Autowired
-	@Qualifier("authorDocumentBuilder")
-	public void setDocumentBuilder(DocumentBuilder<Author> documentBuilder) {
-		super.setDocumentBuilder(documentBuilder);
+	@Qualifier("bookDocumentProvider")
+	public void setDocumentProvider(DocumentProvider<Book> documentProvider) {
+		super.setDocumentProvider(documentProvider);
 	}
 
 	@Override
 	@Autowired
-	@Qualifier("authorPersistenceListenerManager")
-	public void setPersistenceListenerManager(PersistenceListenerManager<Author> persistenceListenerManager) {
+	@Qualifier("bookPersistenceListenerManager")
+	public void setPersistenceListenerManager(PersistenceListenerManager<Book> persistenceListenerManager) {
 		super.setPersistenceListenerManager(persistenceListenerManager);
 	}
 

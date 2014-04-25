@@ -1,11 +1,10 @@
 package com.segal.mongorest.example.builder;
 
 import com.segal.mongorest.core.annotation.DocumentType;
-import com.segal.mongorest.core.support.DocumentBuilder;
+import com.segal.mongorest.core.support.DocumentProvider;
 import com.segal.mongorest.core.support.DocumentTestResult;
 import com.segal.mongorest.core.support.InvalidDocumentTestResult;
 import com.segal.mongorest.core.support.ValidDocumentTestResult;
-import com.segal.mongorest.example.pojo.Author;
 import com.segal.mongorest.example.pojo.Book;
 import org.springframework.stereotype.Component;
 
@@ -23,19 +22,19 @@ import java.util.Date;
  */
 @Component
 @DocumentType("book")
-public class BookDocumentBuilder implements DocumentBuilder<Book> {
+public class BookDocumentProvider implements DocumentProvider<Book> {
 
 	@Override
 	public Collection<DocumentTestResult<Book>> createDocuments() {
 		Book validBook = new Book("title", "isbn", "publisher", new Date());
-		DocumentTestResult<Book> validResult = new ValidDocumentTestResult<>(validBook, false);
+		DocumentTestResult<Book> validResult = new ValidDocumentTestResult<>(validBook, DocumentTestResult.Operation.create);
 
 		Book invalidBook = new Book(null, null, "stuff", null);
-		InvalidDocumentTestResult<Book> invalidResult = new InvalidDocumentTestResult<>(invalidBook, false,
+		InvalidDocumentTestResult<Book> invalidResult = new InvalidDocumentTestResult<>(invalidBook, DocumentTestResult.Operation.create,
 				ConstraintViolationException.class);
 
 		Book invalidUpdate = new Book("title", "isbn", "publisher", new Date());
-		InvalidDocumentTestResult<Book> invalidUpdateResult = new InvalidDocumentTestResult<>(invalidUpdate, true,
+		InvalidDocumentTestResult<Book> invalidUpdateResult = new InvalidDocumentTestResult<>(invalidUpdate, DocumentTestResult.Operation.update,
 				ConstraintViolationException.class);
 
 		return Arrays.asList(validResult, invalidResult, invalidUpdateResult);

@@ -1,7 +1,7 @@
 package com.segal.mongorest.example.builder;
 
 import com.segal.mongorest.core.annotation.DocumentType;
-import com.segal.mongorest.core.support.DocumentBuilder;
+import com.segal.mongorest.core.support.DocumentProvider;
 import com.segal.mongorest.core.support.DocumentTestResult;
 import com.segal.mongorest.example.pojo.Book;
 import com.segal.mongorest.web.RestErrorResult;
@@ -21,16 +21,16 @@ import java.util.Date;
  */
 @Component
 @DocumentType("book")
-public class BookControllerDocumentBuilder implements DocumentBuilder<Book> {
+public class BookControllerDocumentProvider implements DocumentProvider<Book> {
 
 	@Override
 	public Collection<DocumentTestResult<Book>> createDocuments() {
 		Book validBook = new Book("title", "isbn", "publisher", new Date());
-		DocumentTestResult<Book> validResult = new RestErrorResult<>(validBook, false,
+		DocumentTestResult<Book> validResult = new RestErrorResult<>(validBook, DocumentTestResult.Operation.create,
 				MockMvcResultMatchers.status().isOk());
 
 		Book invalidBook = new Book(null, "isbn", "publisher", null);
-		DocumentTestResult<Book> invalidResult = new RestErrorResult<>(invalidBook, false,
+		DocumentTestResult<Book> invalidResult = new RestErrorResult<>(invalidBook, DocumentTestResult.Operation.create,
 				MockMvcResultMatchers.status().is4xxClientError());
 
 		return Arrays.asList(validResult, invalidResult);
