@@ -7,7 +7,7 @@
     </appender>
 
     <logger name="com.segal.mongorest">
-        <level value="info"/>
+        <level value="debug"/>
     </logger>
 
     <logger name="org.springframework">
