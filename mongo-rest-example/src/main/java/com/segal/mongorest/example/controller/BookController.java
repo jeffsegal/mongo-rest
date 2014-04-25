@@ -4,6 +4,8 @@ import com.segal.mongorest.core.service.CrudService;
 import com.segal.mongorest.example.pojo.Author;
 import com.segal.mongorest.example.pojo.Book;
 import com.segal.mongorest.web.rest.DocumentController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,12 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/book")
 public class BookController extends DocumentController<Book> {
 
-	public BookController() {
-
-	}
-
-	public BookController(CrudService<Book> authorCrudService) {
-		this.service = authorCrudService;
+	@Override
+	@Autowired
+	@Qualifier("bookService")
+	public void setService(CrudService<Book> service) {
+		super.setService(service);
 	}
 
 }
