@@ -2,6 +2,8 @@ package com.segal.mongorest.core.service;
 
 import com.segal.mongorest.core.pojo.BaseDocument;
 import com.segal.mongorest.core.util.BeanValidator;
+import com.segal.mongorest.core.util.DefaultTimeProvider;
+import com.segal.mongorest.core.util.TimeProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ public class DefaultMongoCrudService<T extends BaseDocument> implements CrudServ
 
 	PersistenceListenerManager<T> persistenceListenerManager;
 	CrudRepository<T, String> crudRepository;
+	TimeProvider timeProvider = new DefaultTimeProvider();
 
 	public DefaultMongoCrudService() {
 	}
@@ -35,6 +38,13 @@ public class DefaultMongoCrudService<T extends BaseDocument> implements CrudServ
 	                               PersistenceListenerManager<T> persistenceListenerManager) {
 		this.crudRepository = crudRepository;
 		this.persistenceListenerManager = persistenceListenerManager;
+	}
+
+	public DefaultMongoCrudService(CrudRepository<T, String> crudRepository,
+	                               PersistenceListenerManager<T> persistenceListenerManager, TimeProvider timeProvider) {
+		this.crudRepository = crudRepository;
+		this.persistenceListenerManager = persistenceListenerManager;
+		this.timeProvider = timeProvider;
 	}
 
 	public T update(T pojo) {
@@ -67,7 +77,7 @@ public class DefaultMongoCrudService<T extends BaseDocument> implements CrudServ
 		}
 
 		if (violations.isEmpty()) {
-			pojo.setLastUpdatedMillis(System.currentTimeMillis());
+			pojo.setLastUpdatedMillis(timeProvider.getSystemTimeMillis());
 			T saved = crudRepository.save(pojo);
 			if (!isUpdate) {
 				persistenceListenerManager.notifyDocumentAdded(saved);
@@ -120,4 +130,9 @@ public class DefaultMongoCrudService<T extends BaseDocument> implements CrudServ
 	public void setCrudRepository(CrudRepository<T, String> crudRepository) {
 		this.crudRepository = crudRepository;
 	}
+
+	public void setTimeProvider(TimeProvider timeProvider) {
+		this.timeProvider = timeProvider;
+	}
+
 }
