@@ -68,12 +68,12 @@ Deploying these classes into your Spring MVC web app will yield the following se
 
 | URI | HTTP Method | Description |
 | ------------- | ------------- | ------------- |
-| **/author/test | GET | Returns literal string "TEST" for basic smoke testing of the service  |
-| **/author/ | GET | Returns all Authors in the repository |
-| **/author/{id} | GET | Returns the Author with ID {id} |
-| **/author/ | POST | Creates new Author if POST content is a valid Author represented in JSON |
-| **/author/{id} | PUT | Updates an existing Author if PUT content is a valid Author represented in JSON |
-| **/author/{id} | DELETE | Deletes an existing Author with ID {id} |
+| /author/test | GET | Returns literal string "TEST" for basic smoke testing of the service  |
+| /author/ | GET | Returns all Authors in the repository |
+| /author/{id} | GET | Returns the Author with ID {id} |
+| /author/ | POST | Creates new Author if POST content is a valid Author represented in JSON |
+| /author/{id} | PUT | Updates an existing Author if PUT content is a valid Author represented in JSON |
+| /author/{id} | DELETE | Deletes an existing Author with ID {id} |
 
 ==========
 
