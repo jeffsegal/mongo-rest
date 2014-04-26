@@ -18,7 +18,8 @@ public @interface DocumentType {
 	/**
   * @return the String document type to map to this class
   */
- String value();
+	String value() default DEFAULT_TYPE;
 
+	public static final String DEFAULT_TYPE = "DEFAULT-DOCUMENT-TYPE";
 
 }

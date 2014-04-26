@@ -35,7 +35,7 @@ public abstract class ClasspathAndBeanScanner {
 	@Autowired
 	ApplicationContext applicationContext;
 
-	public abstract void handleClasspathEntry(Class clazz);
+	public abstract void handleClasspathEntry(Class clazz, String documentType);
 
 	public abstract void handleBeanEntry(Object bean, String documentType);
 
@@ -54,7 +54,7 @@ public abstract class ClasspathAndBeanScanner {
 			for (BeanDefinition bd : scanner.findCandidateComponents(basePackage)) {
 				try {
 					Class clazz = Class.forName(bd.getBeanClassName());
-					handleClasspathEntry(clazz);
+					handleClasspathEntry(clazz, getDocumentType(clazz));
 				} catch (ClassNotFoundException e) {
 					log.error("Could not load class with name '" + bd.getBeanClassName() + "'", e);
 				}
@@ -70,10 +70,9 @@ public abstract class ClasspathAndBeanScanner {
 		for (Map.Entry<String, Object> entry : beans.entrySet()) {
 			String name = entry.getKey();
 			Object bean = entry.getValue();
-			log.trace("Looking for '" + DocumentType.class + "' annotation on class '" + bean.getClass() + "'");
 			DocumentType annotation = bean.getClass().getAnnotation(DocumentType.class);
 			if (annotation != null) {
-				handleBeanEntry(bean, annotation.value());
+				handleBeanEntry(bean, getDocumentType(bean.getClass()));
 			}
 		}
 
@@ -107,6 +106,21 @@ public abstract class ClasspathAndBeanScanner {
 			}
 		}
 		return result;
+	}
+
+	private String getDocumentType(Class clazz) {
+		log.trace("Looking for '" + DocumentType.class + "' annotation on class '" + clazz + "'");
+		String documentType = null;
+		DocumentType annotation = (DocumentType) clazz.getAnnotation(DocumentType.class);
+		if (annotation != null) {
+			if (DocumentType.DEFAULT_TYPE.equals(annotation.value())) {
+				documentType = clazz.getSimpleName().toLowerCase();
+			}
+			else {
+				documentType = annotation.value();
+			}
+		}
+		return documentType;
 	}
 
 	public void setPackages(List<String> packages) {

@@ -45,18 +45,13 @@ public class ApplicationRegistry extends ClasspathAndBeanScanner {
 	}
 
 	@Override
-	public void handleClasspathEntry(Class clazz) {
+	public void handleClasspathEntry(Class clazz, String documentType) {
 		log.trace("Looking for '" + DocumentType.class + "' annotation on class '" +
 				clazz.getCanonicalName() + "'");
-		DocumentType annotation = (DocumentType) clazz.getAnnotation(DocumentType.class);
-		if (annotation != null) {
-			if (annotation.value() != null) {
-				if (BaseDocument.class.isAssignableFrom(clazz)) {
-					log.info("Mapping '" + annotation.value() + "' to " + BaseDocument.class.getSimpleName() +
-							" '" + clazz.getCanonicalName() + "'");
-					documentRegistry.put(annotation.value(), clazz);
-				}
-			}
+		if (BaseDocument.class.isAssignableFrom(clazz)) {
+			log.info("Mapping '" + documentType + "' to " + BaseDocument.class.getSimpleName() +
+					" '" + clazz.getCanonicalName() + "'");
+			documentRegistry.put(documentType, clazz);
 		}
 	}
 
