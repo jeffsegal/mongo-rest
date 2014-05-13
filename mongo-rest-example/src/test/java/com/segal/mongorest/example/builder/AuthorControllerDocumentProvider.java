@@ -4,7 +4,7 @@ import com.segal.mongorest.core.annotation.DocumentType;
 import com.segal.mongorest.core.support.DocumentProvider;
 import com.segal.mongorest.core.support.DocumentTestResult;
 import com.segal.mongorest.example.pojo.Author;
-import com.segal.mongorest.web.RestErrorResult;
+import com.segal.mongorest.web.RestServiceResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -31,12 +31,12 @@ public class AuthorControllerDocumentProvider implements DocumentProvider<Author
 	public Collection<DocumentTestResult<Author>> createDocuments() {
 		Author validAuthor = new Author("first", "middle", "last", new Date(
 				new Date().getTime() - 1000L * 60 * 60 * 24 * 365 * 50), null);
-		DocumentTestResult<Author> validCreate = new RestErrorResult<>(validAuthor, DocumentTestResult.Operation.create,
+		DocumentTestResult<Author> validCreate = new RestServiceResult<>(validAuthor, DocumentTestResult.Operation.create,
 				MockMvcResultMatchers.status().isOk());
 
 		Author invalidAuthor = new Author(null, "middle", null, new Date(
 				new Date().getTime() - 1000L * 60 * 60 * 24 * 365 * 50), null);
-		DocumentTestResult<Author> invalidCreate = new RestErrorResult<>(invalidAuthor, DocumentTestResult.Operation.create,
+		DocumentTestResult<Author> invalidCreate = new RestServiceResult<>(invalidAuthor, DocumentTestResult.Operation.create,
 				MockMvcResultMatchers.status().is4xxClientError());
 
 		Author clonedAuthor = null;
@@ -46,10 +46,10 @@ public class AuthorControllerDocumentProvider implements DocumentProvider<Author
 		} catch (CloneNotSupportedException e) {
 			log.warn("Error while cloning author.", e);
 		}
-		DocumentTestResult<Author> validFind = new RestErrorResult<>(clonedAuthor, DocumentTestResult.Operation.find,
+		DocumentTestResult<Author> validFind = new RestServiceResult<>(clonedAuthor, DocumentTestResult.Operation.find,
 				MockMvcResultMatchers.status().isOk());
 
-		DocumentTestResult<Author> invalidFind = new RestErrorResult<>(new Author(), DocumentTestResult.Operation.find,
+		DocumentTestResult<Author> invalidFind = new RestServiceResult<>(new Author(), DocumentTestResult.Operation.find,
 				MockMvcResultMatchers.content().string(""));
 
 		return Arrays.asList(validCreate, invalidCreate, validFind, invalidFind);

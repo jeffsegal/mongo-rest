@@ -11,25 +11,25 @@ import org.springframework.test.web.servlet.ResultMatcher;
  * Time: 4:50 PM
  * To change this template use File | Settings | File Templates.
  */
-public class RestErrorResult<T extends BaseDocument> extends DocumentTestResult<T> {
+public class RestServiceResult<T extends BaseDocument> extends DocumentTestResult<T> {
 
 	private static final long serialVersionUID = -8290138532696665485L;
 
 	ResultMatcher expectation;
 
-	public RestErrorResult() {
+	public RestServiceResult() {
 	}
 
-	public RestErrorResult(ResultMatcher expectation) {
+	public RestServiceResult(ResultMatcher expectation) {
 		this.expectation = expectation;
 	}
 
-	public RestErrorResult(T document, ResultMatcher expectation) {
+	public RestServiceResult(T document, ResultMatcher expectation) {
 		super(document);
 		this.expectation = expectation;
 	}
 
-	public RestErrorResult(T document, Operation operation, ResultMatcher expectation) {
+	public RestServiceResult(T document, Operation operation, ResultMatcher expectation) {
 		super(document, operation);
 		this.expectation = expectation;
 	}

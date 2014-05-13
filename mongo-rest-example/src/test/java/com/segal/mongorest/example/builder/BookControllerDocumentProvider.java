@@ -4,7 +4,7 @@ import com.segal.mongorest.core.annotation.DocumentType;
 import com.segal.mongorest.core.support.DocumentProvider;
 import com.segal.mongorest.core.support.DocumentTestResult;
 import com.segal.mongorest.example.pojo.Book;
-import com.segal.mongorest.web.RestErrorResult;
+import com.segal.mongorest.web.RestServiceResult;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -26,11 +26,11 @@ public class BookControllerDocumentProvider implements DocumentProvider<Book> {
 	@Override
 	public Collection<DocumentTestResult<Book>> createDocuments() {
 		Book validBook = new Book("title", "isbn", "publisher", new Date());
-		DocumentTestResult<Book> validResult = new RestErrorResult<>(validBook, DocumentTestResult.Operation.create,
+		DocumentTestResult<Book> validResult = new RestServiceResult<>(validBook, DocumentTestResult.Operation.create,
 				MockMvcResultMatchers.status().isOk());
 
 		Book invalidBook = new Book(null, "isbn", "publisher", null);
-		DocumentTestResult<Book> invalidResult = new RestErrorResult<>(invalidBook, DocumentTestResult.Operation.create,
+		DocumentTestResult<Book> invalidResult = new RestServiceResult<>(invalidBook, DocumentTestResult.Operation.create,
 				MockMvcResultMatchers.status().is4xxClientError());
 
 		return Arrays.asList(validResult, invalidResult);
