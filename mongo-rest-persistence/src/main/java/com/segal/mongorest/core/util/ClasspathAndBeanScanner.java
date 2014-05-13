@@ -7,6 +7,7 @@ import com.segal.mongorest.core.annotation.DocumentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.ClassPathScanningCandidateComponen
 import org.springframework.core.type.StandardMethodMetadata;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 
+import javax.annotation.Resource;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +32,9 @@ public abstract class ClasspathAndBeanScanner {
 
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
-	List<String> packages = Arrays.asList("com.segal.mongorest");
+	@Resource
+	@Qualifier("classpathToScan")
+	List<String> packages;
 
 	@Autowired
 	ApplicationContext applicationContext;
