@@ -80,6 +80,7 @@ public class DocumentControllerTest<T extends BaseDocument> {
 	public void testSaveDocuments() throws Exception {
 		Collection<DocumentTestResult<T>> results = documentProvider.createDocuments();
 		for (DocumentTestResult result : results) {
+			log.info("Validating: " + result);
 			if (result instanceof RestErrorResult) {
 				RestErrorResult restErrorResult = (RestErrorResult) result;
 				String documentType = applicationRegistry.getDocumentType(restErrorResult.getDocument().getClass());
@@ -99,6 +100,7 @@ public class DocumentControllerTest<T extends BaseDocument> {
 	}
 
 	protected void doCreate(String url, T document, ResultMatcher resultMatcher) throws Exception {
+		log.info("Executing create against URL '" + url + "'");
 		resetToNice(crudRepository);
 		expect(crudRepository.save((document))).andReturn(document).anyTimes();
 		replay(crudRepository);
@@ -107,6 +109,7 @@ public class DocumentControllerTest<T extends BaseDocument> {
 	}
 
 	protected void doUpdate(String url, T document, ResultMatcher resultMatcher) throws Exception {
+		log.info("Executing update against URL '" + url + "'");
 		doSave(put(url), document, resultMatcher);
 	}
 
@@ -124,6 +127,7 @@ public class DocumentControllerTest<T extends BaseDocument> {
 	}
 
 	private void doGet(String url, String id, T document, ResultMatcher resultMatcher) throws Exception {
+		log.info("Executing get against URL '" + url + "'");
 		resetToNice(crudRepository);
 		expect(crudRepository.findOne((id))).andReturn(document).anyTimes();
 		replay(crudRepository);
