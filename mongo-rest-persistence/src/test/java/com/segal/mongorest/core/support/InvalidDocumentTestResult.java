@@ -1,6 +1,8 @@
 package com.segal.mongorest.core.support;
 
+import com.google.common.base.Objects;
 import com.segal.mongorest.core.pojo.BaseDocument;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,6 +31,14 @@ public class InvalidDocumentTestResult<T extends BaseDocument> extends DocumentT
 
 	public void setExceptionClass(Class<? extends Exception> exceptionClass) {
 		this.exceptionClass = exceptionClass;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this)
+				.appendSuper(super.toString())
+				.append("exceptionClass", exceptionClass)
+				.toString();
 	}
 
 }

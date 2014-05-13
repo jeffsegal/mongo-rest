@@ -52,6 +52,7 @@ public class DocumentValidationTest<T extends BaseDocument> extends EasyMockSupp
 	@Test
 	public void testDocuments() {
 		for (DocumentTestResult<T> result : documentProvider.createDocuments()) {
+			log.info("Validating: " + result);
 			if (result instanceof ValidDocumentTestResult) {
 				if (DocumentTestResult.Operation.create.equals(result.getOperation()) ||
 						DocumentTestResult.Operation.update.equals(result.getOperation())) {

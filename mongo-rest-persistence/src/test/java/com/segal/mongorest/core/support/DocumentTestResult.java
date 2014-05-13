@@ -1,6 +1,8 @@
 package com.segal.mongorest.core.support;
 
+import com.google.common.base.Objects;
 import com.segal.mongorest.core.pojo.BaseDocument;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.Serializable;
 
@@ -48,4 +50,11 @@ public class DocumentTestResult<T extends BaseDocument> implements Serializable 
 		this.operation = operation;
 	}
 
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this)
+				.append("document", document)
+				.append("operation", operation)
+				.toString();
+	}
 }

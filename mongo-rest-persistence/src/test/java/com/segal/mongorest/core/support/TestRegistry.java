@@ -30,7 +30,7 @@ public class TestRegistry extends ClasspathAndBeanScanner {
 	}
 
 	@Override
-	public void handleClasspathEntry(Class clazz) {
+	public void handleClasspathEntry(Class clazz, String documentType) {
 		// no-op
 	}
 
