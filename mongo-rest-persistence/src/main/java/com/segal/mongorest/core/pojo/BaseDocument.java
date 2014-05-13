@@ -4,6 +4,7 @@ import com.mongodb.util.JSON;
 import com.segal.mongorest.core.service.CreateChecks;
 import com.segal.mongorest.core.service.UpdateChecks;
 import org.apache.commons.beanutils.BeanMap;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
 
@@ -25,6 +26,8 @@ public abstract class BaseDocument implements Cloneable, Serializable {
 
 	private static final long serialVersionUID = -6777426265591642262L;
 
+	protected long createdMillis;
+
 	protected long lastUpdatedMillis;
 
 	@Id
@@ -33,16 +36,16 @@ public abstract class BaseDocument implements Cloneable, Serializable {
 	@Null(groups = CreateChecks.class)
 	protected String id;
 
-	public Map asMap() {
-		Map map = new HashMap(new BeanMap(this));
-		map.remove("class");
-		return map;
-	}
-
-	@Override
-	public String toString() {
-		return JSON.serialize(asMap());
-	}
+//	public Map asMap() {
+//		Map map = new HashMap(new BeanMap(this));
+//		map.remove("class");
+//		return map;
+//	}
+//
+//	@Override
+//	public String toString() {
+//		return JSON.serialize(asMap());
+//	}
 
 	public String getId() {
 		return id;
@@ -52,8 +55,16 @@ public abstract class BaseDocument implements Cloneable, Serializable {
 		this.id = id;
 	}
 
+	public long getCreatedMillis() {
+		return createdMillis;
+	}
+
 	public long getLastUpdatedMillis() {
 		return lastUpdatedMillis;
+	}
+
+	public void setCreatedMillis(long createdMillis) {
+		this.createdMillis = createdMillis;
 	}
 
 	public void setLastUpdatedMillis(long lastUpdatedMillis) {
@@ -65,4 +76,12 @@ public abstract class BaseDocument implements Cloneable, Serializable {
 		return super.clone();
 	}
 
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this)
+				.append("createdMillis", createdMillis)
+				.append("lastUpdatedMillis", lastUpdatedMillis)
+				.append("id", id)
+				.toString();
+	}
 }
