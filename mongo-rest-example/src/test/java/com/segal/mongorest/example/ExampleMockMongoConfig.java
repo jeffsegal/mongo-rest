@@ -19,6 +19,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.*;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.createNiceMock;
 
@@ -51,6 +54,12 @@ public class ExampleMockMongoConfig extends MongoConfig implements PersistenceLi
 
 	@Autowired
 	PersistenceListenerManager<Book> bookPersistenceListenerManager;
+
+	@Bean
+	@Qualifier("classpathToScan")
+	String packages() {
+		return "com.segal.mongorest";
+	}
 
 	@Bean
 	@DocumentType("author")
