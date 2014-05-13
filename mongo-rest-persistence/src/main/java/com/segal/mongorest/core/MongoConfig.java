@@ -34,34 +34,34 @@ public abstract class MongoConfig extends AbstractMongoConfiguration {
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Value("${com.segal.mongorest.mongodb.port}")
-	int mongoPort;
+	protected int mongoPort;
 
 	@Value("${com.segal.mongorest.mongodb.host}")
-	String mongoHost;
+	protected String mongoHost;
 
 	@Value("${com.segal.mongorest.mongodb.dbname}")
-	String dbname;
+	protected String dbname;
 
 	@Value("${com.segal.mongorest.mongodb.username}")
-	String username;
+	protected String username;
 
 	@Value("${com.segal.mongorest.mongodb.password}")
-	String password;
+	protected String password;
 
 	@Value("${com.segal.mongorest.mongodb.useSsl}")
-	boolean useSsl = false;
+	protected boolean useSsl = false;
 
 	@Autowired
-	SocketFactory mongoSocketFactory;
+	protected SocketFactory mongoSocketFactory;
 
 	@Autowired
-	MongoOptions mongoOptions;
+	protected MongoOptions mongoOptions;
 
 	@Autowired
-	Mongo mongo;
+	protected Mongo mongo;
 
 	@Autowired
-	MongoTemplate mongoTemplate;
+	protected MongoTemplate mongoTemplate;
 
 	@Bean
 	public MongoDbFactory mongoDbFactory() throws Exception {
