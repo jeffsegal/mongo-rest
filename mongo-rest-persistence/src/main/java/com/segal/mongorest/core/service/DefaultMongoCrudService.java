@@ -77,13 +77,22 @@ public class DefaultMongoCrudService<T extends BaseDocument> implements CrudServ
 		}
 
 		if (violations.isEmpty()) {
-			pojo.setLastUpdatedMillis(timeProvider.getSystemTimeMillis());
-			T saved = crudRepository.save(pojo);
+
+			long timestamp = timeProvider.getSystemTimeMillis();
+
+			// Add createdMillis for create operations
 			if (!isUpdate) {
-				persistenceListenerManager.notifyDocumentAdded(saved);
+				pojo.setCreatedMillis(timestamp);
+			}
+
+			// Add lastUpdatedMillis for all save operations
+			pojo.setLastUpdatedMillis(timestamp);
+			T saved = crudRepository.save(pojo);
+			if (isUpdate) {
+				persistenceListenerManager.notifyDocumentUpdated(saved);
 			}
 			else {
-				persistenceListenerManager.notifyDocumentUpdated(saved);
+				persistenceListenerManager.notifyDocumentAdded(saved);
 			}
 			return saved;
 		}
