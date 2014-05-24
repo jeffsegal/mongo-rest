@@ -37,3 +37,7 @@ Thumbs.db
 ##########################
 *.iml
 .idea
+
+# Maven Generated Files	#
+#########################
+*/target
