@@ -7,6 +7,7 @@ import com.segal.mongorest.core.pojo.BaseDocument;
 import com.segal.mongorest.core.service.DefaultMongoCrudService;
 import com.segal.mongorest.core.service.PersistenceListener;
 import com.segal.mongorest.core.service.PersistenceListenerManager;
+import com.segal.mongorest.core.util.DefaultTimeProvider;
 import com.segal.mongorest.core.util.TimeProvider;
 import com.segal.mongorest.example.pojo.Author;
 import com.segal.mongorest.example.pojo.Book;
@@ -39,7 +40,7 @@ import static org.easymock.EasyMock.createNiceMock;
 				@ComponentScan.Filter(type = FilterType.ANNOTATION, value = Configuration.class)})
 @Import(MockRepositoryConfig.class)
 @PropertySource("classpath:mongorest.properties")
-public class ExampleMockMongoConfig extends MongoConfig implements PersistenceListener {
+public class ExampleMockMongoConfig extends MongoConfig {
 
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -49,12 +50,6 @@ public class ExampleMockMongoConfig extends MongoConfig implements PersistenceLi
 	@Autowired
 	BookRepository bookRepository;
 
-	@Autowired
-	PersistenceListenerManager<Author> authorPersistenceListenerManager;
-
-	@Autowired
-	PersistenceListenerManager<Book> bookPersistenceListenerManager;
-
 	@Bean
 	@Qualifier("classpathToScan")
 	String packages() {
@@ -62,38 +57,21 @@ public class ExampleMockMongoConfig extends MongoConfig implements PersistenceLi
 	}
 
 	@Bean
-	@DocumentType("author")
-	public PersistenceListenerManager<Author> authorPersistenceListenerManager() {
-		PersistenceListenerManager manager = new PersistenceListenerManager<>();
-		manager.addPersistenceListener(this);
-		return manager;
-	}
-
-	@Bean
-	@DocumentType("book")
-	public PersistenceListenerManager<Book> bookPersistenceListenerManager() {
-		PersistenceListenerManager manager = new PersistenceListenerManager<>();
-		manager.addPersistenceListener(this);
-		return manager;
-	}
-
-	@Bean
 	@Qualifier("authorService")
 	@DocumentType("author")
 	public DefaultMongoCrudService<Author> authorService() {
-		return getMongoService(authorRepository, authorPersistenceListenerManager);
+		return getMongoService(authorRepository);
 	}
 
 	@Bean
 	@Qualifier("bookService")
 	@DocumentType("book")
 	public DefaultMongoCrudService<Book> bookService() {
-		return getMongoService(bookRepository, bookPersistenceListenerManager);
+		return getMongoService(bookRepository);
 	}
 
-	private DefaultMongoCrudService getMongoService(CrudRepository crudRepository,
-	                                                PersistenceListenerManager persistenceListenerManager) {
-		return new DefaultMongoCrudService(crudRepository, persistenceListenerManager, createNiceMock(TimeProvider.class));
+	private DefaultMongoCrudService getMongoService(CrudRepository crudRepository) {
+		return new DefaultMongoCrudService(crudRepository, createNiceMock(TimeProvider.class));
 	}
 
 	@Bean
@@ -102,18 +80,4 @@ public class ExampleMockMongoConfig extends MongoConfig implements PersistenceLi
 		return getDefaultMongoOptions();
 	}
 
-	@Override
-	public void documentAdded(BaseDocument pojo) {
-		log.info("document added");
-	}
-
-	@Override
-	public void documentUpdated(BaseDocument pojo) {
-		log.info("document updated");
-	}
-
-	@Override
-	public void documentDeleted(String id) {
-		log.info("document deleted");
-	}
 }

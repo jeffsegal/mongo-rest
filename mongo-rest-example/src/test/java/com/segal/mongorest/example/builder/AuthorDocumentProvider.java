@@ -45,13 +45,17 @@ public class AuthorDocumentProvider implements DocumentProvider<Author> {
 		} catch (CloneNotSupportedException e) {
 			log.warn("Error while cloning author.", e);
 		}
+
+		DocumentTestResult<Author> anotherValidResult = new ValidDocumentTestResult<>(validAuthor,
+				DocumentTestResult.Operation.create);
+
 		ValidDocumentTestResult<Author> validFind = new ValidDocumentTestResult<>(clonedAuthor,
 				DocumentTestResult.Operation.find);
 
 		InvalidDocumentTestResult<Author> invalidFind = new InvalidDocumentTestResult<>(new Author(),
 				DocumentTestResult.Operation.find, IllegalArgumentException.class);
 
-		return Arrays.asList(validResult, invalidResult, validFind, invalidFind);
+		return Arrays.asList(validResult, invalidResult, anotherValidResult, validFind, invalidFind);
 	}
 
 }

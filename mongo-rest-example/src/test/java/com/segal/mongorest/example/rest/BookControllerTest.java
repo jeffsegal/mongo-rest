@@ -1,5 +1,6 @@
 package com.segal.mongorest.example.rest;
 
+import com.segal.mongorest.core.service.CrudService;
 import com.segal.mongorest.core.support.DocumentProvider;
 import com.segal.mongorest.example.ExampleMockRestConfig;
 import com.segal.mongorest.example.pojo.Book;
@@ -11,8 +12,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-
-import javax.annotation.PostConstruct;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,9 +34,9 @@ public class BookControllerTest extends DocumentControllerTest<Book> {
 
 	@Override
 	@Autowired
-	@Qualifier("bookRepository")
-	public void setCrudRepository(CrudRepository<Book, String> crudRepository) {
-		super.setCrudRepository(crudRepository);
+	@Qualifier("bookService")
+	public void setCrudService(CrudService<Book> crudService) {
+		super.setCrudService(crudService);
 	}
 
 }

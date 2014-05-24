@@ -47,11 +47,5 @@ public class AuthorValidationTest extends DocumentValidationTest<Author> {
 		super.setDocumentProvider(documentProvider);
 	}
 
-	@Override
-	@Autowired
-	@Qualifier("authorPersistenceListenerManager")
-	public void setPersistenceListenerManager(PersistenceListenerManager<Author> persistenceListenerManager) {
-		super.setPersistenceListenerManager(persistenceListenerManager);
-	}
 
 }

@@ -47,11 +47,4 @@ public class BookValidationTest extends DocumentValidationTest<Book> {
 		super.setDocumentProvider(documentProvider);
 	}
 
-	@Override
-	@Autowired
-	@Qualifier("bookPersistenceListenerManager")
-	public void setPersistenceListenerManager(PersistenceListenerManager<Book> persistenceListenerManager) {
-		super.setPersistenceListenerManager(persistenceListenerManager);
-	}
-
 }

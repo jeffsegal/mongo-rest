@@ -135,7 +135,7 @@ public class ExampleMockRestConfig {}
 				@ComponentScan.Filter(type = FilterType.ANNOTATION, value = Configuration.class)})
 @Import(MockRepositoryConfig.class)
 @PropertySource("classpath:mongorest.properties")
-public class ExampleMockMongoConfig extends MongoConfig implements PersistenceListener {
+public class ExampleMockMongoConfig extends MongoConfig {
 
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -145,45 +145,22 @@ public class ExampleMockMongoConfig extends MongoConfig implements PersistenceLi
 	@Autowired
 	BookRepository bookRepository;
 
-	@Autowired
-	PersistenceListenerManager<Author> authorPersistenceListenerManager;
-
-	@Autowired
-	PersistenceListenerManager<Book> bookPersistenceListenerManager;
-
-	@Bean
-	@DocumentType("author")
-	public PersistenceListenerManager<Author> authorPersistenceListenerManager() {
-		PersistenceListenerManager manager = new PersistenceListenerManager<>();
-		manager.addPersistenceListener(this);
-		return manager;
-	}
-
-	@Bean
-	@DocumentType("book")
-	public PersistenceListenerManager<Book> bookPersistenceListenerManager() {
-		PersistenceListenerManager manager = new PersistenceListenerManager<>();
-		manager.addPersistenceListener(this);
-		return manager;
-	}
-
 	@Bean
 	@Qualifier("authorService")
 	@DocumentType("author")
 	public DefaultMongoCrudService<Author> authorService() {
-		return getMongoService(authorRepository, authorPersistenceListenerManager);
+		return getMongoService(authorRepository);
 	}
 
 	@Bean
 	@Qualifier("bookService")
 	@DocumentType("book")
 	public DefaultMongoCrudService<Book> bookService() {
-		return getMongoService(bookRepository, bookPersistenceListenerManager);
+		return getMongoService(bookRepository);
 	}
 
-	private DefaultMongoCrudService getMongoService(CrudRepository crudRepository,
-	                                                PersistenceListenerManager persistenceListenerManager) {
-		return new DefaultMongoCrudService(crudRepository, persistenceListenerManager, createNiceMock(TimeProvider.class));
+	private DefaultMongoCrudService getMongoService(CrudRepository crudService) {
+		return new DefaultMongoCrudService(crudService, createNiceMock(TimeProvider.class));
 	}
 
 	@Bean
@@ -192,20 +169,6 @@ public class ExampleMockMongoConfig extends MongoConfig implements PersistenceLi
 		return getDefaultMongoOptions();
 	}
 
-	@Override
-	public void documentAdded(BaseDocument pojo) {
-		log.info("document added");
-	}
-
-	@Override
-	public void documentUpdated(BaseDocument pojo) {
-		log.info("document updated");
-	}
-
-	@Override
-	public void documentDeleted(String id) {
-		log.info("document deleted");
-	}
 }
 
 ```
@@ -239,13 +202,6 @@ public class AuthorValidationTest extends DocumentValidationTest<Author> {
 		super.setDocumentProvider(documentProvider);
 	}
 
-	@Override
-	@Autowired
-	@Qualifier("authorPersistenceListenerManager")
-	public void setPersistenceListenerManager(PersistenceListenerManager<Author> persistenceListenerManager) {
-		super.setPersistenceListenerManager(persistenceListenerManager);
-	}
-
 }
 ```
 
@@ -265,8 +221,8 @@ public class AuthorControllerTest extends DocumentControllerTest<Author> {
 	@Override
 	@Autowired
 	@Qualifier("authorRepository")
-	public void setCrudRepository(CrudRepository<Author, String> crudRepository) {
-		super.setCrudRepository(crudRepository);
+	public void setCrudRepository(CrudRepository<Author, String> crudService) {
+		super.setCrudRepository(crudService);
 	}
 
 }

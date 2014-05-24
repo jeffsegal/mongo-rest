@@ -27,24 +27,21 @@ public class DefaultMongoCrudService<T extends BaseDocument> implements CrudServ
 	@Autowired
 	BeanValidator beanValidator;
 
-	PersistenceListenerManager<T> persistenceListenerManager;
+	PersistenceListenerManager<T> persistenceListenerManager= new PersistenceListenerManager<>();
 	CrudRepository<T, String> crudRepository;
 	TimeProvider timeProvider = new DefaultTimeProvider();
 
 	public DefaultMongoCrudService() {
 	}
 
-	public DefaultMongoCrudService(CrudRepository<T, String> crudRepository,
-	                               PersistenceListenerManager<T> persistenceListenerManager) {
-		this.crudRepository = crudRepository;
-		this.persistenceListenerManager = persistenceListenerManager;
+	public DefaultMongoCrudService(CrudRepository<T, String> crudRepository) {
+		this(crudRepository, null);
 	}
 
-	public DefaultMongoCrudService(CrudRepository<T, String> crudRepository,
-	                               PersistenceListenerManager<T> persistenceListenerManager, TimeProvider timeProvider) {
+	public DefaultMongoCrudService(CrudRepository<T, String> crudRepository, TimeProvider timeProvider) {
 		this.crudRepository = crudRepository;
-		this.persistenceListenerManager = persistenceListenerManager;
-		this.timeProvider = timeProvider;
+		if (timeProvider == null) this.timeProvider = new DefaultTimeProvider();
+		else this.timeProvider = timeProvider;
 	}
 
 	public T update(T pojo) {
@@ -142,6 +139,18 @@ public class DefaultMongoCrudService<T extends BaseDocument> implements CrudServ
 
 	public void setTimeProvider(TimeProvider timeProvider) {
 		this.timeProvider = timeProvider;
+	}
+
+	public CrudRepository<T, String> getCrudRepository() {
+		return crudRepository;
+	}
+
+	public TimeProvider getTimeProvider() {
+		return timeProvider;
+	}
+
+	public PersistenceListenerManager<T> getPersistenceListenerManager() {
+		return persistenceListenerManager;
 	}
 
 }

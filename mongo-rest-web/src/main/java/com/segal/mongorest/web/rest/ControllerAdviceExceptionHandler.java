@@ -4,6 +4,8 @@ package com.segal.mongorest.web.rest;
 import com.segal.mongorest.web.exception.UnknownResourceException;
 import com.segal.mongorest.web.pojo.RestError;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,8 @@ import java.net.ConnectException;
  */
 @ControllerAdvice
 public class ControllerAdviceExceptionHandler extends ResponseEntityExceptionHandler {
+
+	Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@ExceptionHandler({ConstraintViolationException.class})
 	protected ResponseEntity<Object> handleConstraintViolation(RuntimeException e, WebRequest request) {
@@ -48,6 +52,7 @@ public class ControllerAdviceExceptionHandler extends ResponseEntityExceptionHan
 
 	private ResponseEntity<Object> doHandleException(RuntimeException e, WebRequest request, HttpStatus status,
 	                                                 String message, String developerMessage) {
+		if (log.isDebugEnabled()) log.debug("Handling exception: ", e);
 		return handleExceptionInternal(
 				e,
 				new RestError(status.value(), status, message, developerMessage, ExceptionUtils.getStackTrace(e)),

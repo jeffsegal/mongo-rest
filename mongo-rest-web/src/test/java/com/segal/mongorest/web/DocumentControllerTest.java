@@ -3,9 +3,13 @@ package com.segal.mongorest.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.reflect.TypeToken;
 import com.segal.mongorest.core.pojo.BaseDocument;
+import com.segal.mongorest.core.service.CrudService;
 import com.segal.mongorest.core.support.DocumentProvider;
 import com.segal.mongorest.core.support.DocumentTestResult;
 import com.segal.mongorest.core.util.ApplicationRegistry;
+import com.segal.mongorest.core.util.TimeProvider;
+import org.easymock.EasyMock;
+import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -21,12 +25,12 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.annotation.PostConstruct;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.security.Principal;
 import java.util.Collection;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.expect;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Time: 10:29 AM
  * To change this template use File | Settings | File Templates.
  */
-public class DocumentControllerTest<T extends BaseDocument> {
+public class DocumentControllerTest<T extends BaseDocument> extends EasyMockSupport {
 
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -47,7 +51,7 @@ public class DocumentControllerTest<T extends BaseDocument> {
 	@Autowired
 	protected WebApplicationContext wac;
 
-	protected CrudRepository<T, String> crudRepository;
+	protected CrudService<T> crudService;
 	protected DocumentProvider<T> documentProvider;
 	protected MockMvc mockMvc;
 	protected Principal principal = new UsernamePasswordAuthenticationToken("joeUser", "secret");
@@ -56,13 +60,17 @@ public class DocumentControllerTest<T extends BaseDocument> {
 	final TypeToken<T> typeToken = new TypeToken<T>(getClass()) {};
 	final Type type = typeToken.getType();
 
-	@Before
+	@PostConstruct
 	public void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 		if (baseUrl == null && type instanceof Class) {
 			Class clazz = (Class) type;
 			baseUrl = "/" + clazz.getSimpleName().toLowerCase();
 		}
+
+		// Set up TimeProvider mock
+		EasyMock.resetToNice(crudService.getTimeProvider());
+		EasyMock.expect(crudService.getTimeProvider().getSystemTimeMillis()).andStubReturn(1000L);
 	}
 
 	@Test
@@ -81,19 +89,19 @@ public class DocumentControllerTest<T extends BaseDocument> {
 		Collection<DocumentTestResult<T>> results = documentProvider.createDocuments();
 		for (DocumentTestResult result : results) {
 			log.info("Validating: " + result);
-			if (result instanceof RestErrorResult) {
-				RestErrorResult restErrorResult = (RestErrorResult) result;
-				String documentType = applicationRegistry.getDocumentType(restErrorResult.getDocument().getClass());
+			if (result instanceof RestServiceResult) {
+				RestServiceResult restServiceResult = (RestServiceResult) result;
+				String documentType = applicationRegistry.getDocumentType(restServiceResult.getDocument().getClass());
 				// Assume that /documentType == base URL for controller
 				String url = "/" + documentType;
-				if (DocumentTestResult.Operation.create.equals(restErrorResult.getOperation())) {
-					doCreate(url, (T) restErrorResult.getDocument(), restErrorResult.getExpectation());
-				} else if (DocumentTestResult.Operation.update.equals(restErrorResult.getOperation())) {
-					doUpdate(url + "/" + restErrorResult.getDocument().getId(), (T) restErrorResult.getDocument(),
-							restErrorResult.getExpectation());
-				} else if (DocumentTestResult.Operation.find.equals(restErrorResult.getOperation())) {
-					doGet(url + "/" + restErrorResult.getDocument().getId(), restErrorResult.getDocument().getId(),
-							(T) restErrorResult.getDocument(), restErrorResult.getExpectation());
+				if (DocumentTestResult.Operation.create.equals(restServiceResult.getOperation())) {
+					doCreate(url, (T) restServiceResult.getDocument(), restServiceResult.getExpectation());
+				} else if (DocumentTestResult.Operation.update.equals(restServiceResult.getOperation())) {
+					doUpdate(url + "/" + restServiceResult.getDocument().getId(), (T) restServiceResult.getDocument(),
+							restServiceResult.getExpectation());
+				} else if (DocumentTestResult.Operation.find.equals(restServiceResult.getOperation())) {
+					doGet(url + "/" + restServiceResult.getDocument().getId(), restServiceResult.getDocument().getId(),
+							(T) restServiceResult.getDocument(), restServiceResult.getExpectation());
 				}
 			}
 		}
@@ -101,11 +109,11 @@ public class DocumentControllerTest<T extends BaseDocument> {
 
 	protected void doCreate(String url, T document, ResultMatcher resultMatcher) throws Exception {
 		log.info("Executing create against URL '" + url + "'");
-		resetToNice(crudRepository);
-		expect(crudRepository.save((document))).andReturn(document).anyTimes();
-		replay(crudRepository);
+		EasyMock.resetToNice(crudService.getCrudRepository(), crudService.getTimeProvider());
+		EasyMock.expect(crudService.getCrudRepository().save((document))).andReturn(document).anyTimes();
+		EasyMock.replay(crudService.getCrudRepository());
 		doSave(post(url), document, resultMatcher);
-		verify(crudRepository);
+		verifyAll();
 	}
 
 	protected void doUpdate(String url, T document, ResultMatcher resultMatcher) throws Exception {
@@ -128,9 +136,10 @@ public class DocumentControllerTest<T extends BaseDocument> {
 
 	private void doGet(String url, String id, T document, ResultMatcher resultMatcher) throws Exception {
 		log.info("Executing get against URL '" + url + "'");
-		resetToNice(crudRepository);
-		expect(crudRepository.findOne((id))).andReturn(document).anyTimes();
-		replay(crudRepository);
+
+		EasyMock.resetToNice(crudService.getCrudRepository());
+		EasyMock.expect(crudService.getCrudRepository().findOne((id))).andReturn(document).anyTimes();
+		EasyMock.replay(crudService.getCrudRepository());
 
 		MvcResult result = this.mockMvc.perform(get(url)
 				.principal(principal)
@@ -138,15 +147,15 @@ public class DocumentControllerTest<T extends BaseDocument> {
 				.andExpect(resultMatcher)
 				.andReturn();
 		log.debug("Response: " + result.getResponse().getContentAsString());
-		verify(crudRepository);
+		EasyMock.verify(crudService.getCrudRepository());
 	}
 
 	public void setDocumentProvider(DocumentProvider<T> documentProvider) {
 		this.documentProvider = documentProvider;
 	}
 
-	public void setCrudRepository(CrudRepository<T, String> crudRepository) {
-		this.crudRepository = crudRepository;
+	public void setCrudService(CrudService<T> crudService) {
+		this.crudService = crudService;
 	}
 
 	public void setBaseUrl(String baseUrl) {

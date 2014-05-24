@@ -60,9 +60,6 @@ public abstract class MongoConfig extends AbstractMongoConfiguration {
 	@Autowired
 	protected Mongo mongo;
 
-	@Autowired
-	protected MongoTemplate mongoTemplate;
-
 	@Bean
 	public MongoDbFactory mongoDbFactory() throws Exception {
 		return new SimpleMongoDbFactory(mongo, dbname, new UserCredentials(username, password));

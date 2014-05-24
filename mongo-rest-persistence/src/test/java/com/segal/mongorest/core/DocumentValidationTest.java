@@ -8,7 +8,10 @@ import com.segal.mongorest.core.support.DocumentProvider;
 import com.segal.mongorest.core.support.DocumentTestResult;
 import com.segal.mongorest.core.support.InvalidDocumentTestResult;
 import com.segal.mongorest.core.support.ValidDocumentTestResult;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -16,7 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.repository.CrudRepository;
 
-import static org.easymock.EasyMock.*;
+import javax.annotation.PostConstruct;
+
+//import static org.easymock.EasyMock.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,17 +38,22 @@ public class DocumentValidationTest<T extends BaseDocument> extends EasyMockSupp
 	protected CrudRepository<T, String> repository;
 	protected CrudService<T> service;
 	protected DocumentProvider<T> documentProvider;
-	protected PersistenceListenerManager<T> persistenceListenerManager;
 
 	public DocumentValidationTest() {
 	}
 
 	public DocumentValidationTest(CrudRepository<T, String> repository, CrudService<T> service,
-	                              DocumentProvider<T> documentProvider, PersistenceListenerManager<T> persistenceListenerManager) {
+	                              DocumentProvider<T> documentProvider) {
 		this.repository = repository;
 		this.service = service;
 		this.documentProvider = documentProvider;
-		this.persistenceListenerManager = persistenceListenerManager;
+	}
+
+	@PostConstruct
+	public void init() {
+		log.info("Initializing TimeProvider mocks...");
+		EasyMock.resetToNice(service.getTimeProvider());
+		EasyMock.expect(service.getTimeProvider().getSystemTimeMillis()).andStubReturn(1000L);
 	}
 
 	@Rule
@@ -86,12 +96,13 @@ public class DocumentValidationTest<T extends BaseDocument> extends EasyMockSupp
 	}
 
 	public void testValidFind(ValidDocumentTestResult<T> result) {
-		resetToNice(repository);
+		EasyMock.resetToNice(repository);
+
 		// This is the real test - want to make sure that save actually gets called for input that should pass validation
-		expect(repository.findOne((result.getDocument().getId()))).andReturn(result.getDocument());
-		replay(repository);
+		EasyMock.expect(repository.findOne((result.getDocument().getId()))).andReturn(result.getDocument());
+		EasyMock.replay(repository);
 		T document = service.findOne(result.getDocument().getId());
-		verify(repository);
+		EasyMock.verify(repository);
 	}
 
 	public void testInvalidFind(InvalidDocumentTestResult<T> result) {
@@ -108,7 +119,7 @@ public class DocumentValidationTest<T extends BaseDocument> extends EasyMockSupp
 
 	public void testValidSave(ValidDocumentTestResult<T> result) {
 		PersistenceListener<T> mockPersistenceListener = createNiceMock(PersistenceListener.class);
-		persistenceListenerManager.addPersistenceListener(mockPersistenceListener);
+		service.getPersistenceListenerManager().addPersistenceListener(mockPersistenceListener);
 
 		if (DocumentTestResult.Operation.update.equals(result.getOperation())) {
 			result.getDocument().setId(mockId);
@@ -117,10 +128,10 @@ public class DocumentValidationTest<T extends BaseDocument> extends EasyMockSupp
 		else {
 			mockPersistenceListener.documentAdded(result.getDocument());
 		}
-		resetToNice(repository);
+		EasyMock.resetToNice(repository, service.getTimeProvider());
 		// This is the real test - want to make sure that save actually gets called for input that should pass validation
-		expect(repository.save((result.getDocument()))).andReturn(result.getDocument());
-		replay(repository, mockPersistenceListener);
+		EasyMock.expect(repository.save((result.getDocument()))).andReturn(result.getDocument());
+		EasyMock.replay(repository, mockPersistenceListener);
 
 		if (DocumentTestResult.Operation.update.equals(result.getOperation())) {
 			service.update(result.getDocument());
@@ -128,9 +139,9 @@ public class DocumentValidationTest<T extends BaseDocument> extends EasyMockSupp
 		else {
 			service.create(result.getDocument());
 		}
-		verify(mockPersistenceListener);
+		EasyMock.verify(mockPersistenceListener);
 
-		persistenceListenerManager.removePersistenceListener(mockPersistenceListener);
+		service.getPersistenceListenerManager().removePersistenceListener(mockPersistenceListener);
 	}
 
 	@Test
@@ -148,12 +159,12 @@ public class DocumentValidationTest<T extends BaseDocument> extends EasyMockSupp
 	private void doTestDelete(String id) {
 		service.delete(id);
 		PersistenceListener<T> mockPersistenceListener = createNiceMock(PersistenceListener.class);
-		persistenceListenerManager.addPersistenceListener(mockPersistenceListener);
+		service.getPersistenceListenerManager().addPersistenceListener(mockPersistenceListener);
 		mockPersistenceListener.documentDeleted(id);
-		replay(mockPersistenceListener);
+		EasyMock.replay(mockPersistenceListener);
 		service.delete(id);
-		verify(mockPersistenceListener);
-		persistenceListenerManager.removePersistenceListener(mockPersistenceListener);
+		EasyMock.verify(mockPersistenceListener);
+		service.getPersistenceListenerManager().removePersistenceListener(mockPersistenceListener);
 	}
 
 	public void setRepository(CrudRepository repository) {
@@ -166,10 +177,6 @@ public class DocumentValidationTest<T extends BaseDocument> extends EasyMockSupp
 
 	public void setDocumentProvider(DocumentProvider<T> documentProvider) {
 		this.documentProvider = documentProvider;
-	}
-
-	public void setPersistenceListenerManager(PersistenceListenerManager<T> persistenceListenerManager) {
-		this.persistenceListenerManager = persistenceListenerManager;
 	}
 
 }
