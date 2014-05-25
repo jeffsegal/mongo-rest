@@ -20,7 +20,7 @@ import java.util.Collection;
  */
 public class DocumentController<T extends BaseDocument> {
 
-	Logger log = LoggerFactory.getLogger(this.getClass());
+	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
 	protected CrudService<T> service;
 
