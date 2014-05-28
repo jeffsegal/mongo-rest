@@ -19,7 +19,7 @@ public class MockRepositoryConfig extends EasyMockSupport {
 
 	@Bean
 	@DocumentType("author")
-		AuthorRepository authorRepository() {
+	AuthorRepository authorRepository() {
 		return createNiceMock(AuthorRepository.class);
 	}
 

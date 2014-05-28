@@ -1,9 +1,7 @@
 package com.segal.mongorest.core.pojo;
 
-import com.mongodb.util.JSON;
 import com.segal.mongorest.core.service.CreateChecks;
 import com.segal.mongorest.core.service.UpdateChecks;
-import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
@@ -12,8 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.validation.constraints.Null;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,17 +31,6 @@ public abstract class BaseDocument implements Cloneable, Serializable {
 	@NotBlank(groups = UpdateChecks.class)
 	@Null(groups = CreateChecks.class)
 	protected String id;
-
-//	public Map asMap() {
-//		Map map = new HashMap(new BeanMap(this));
-//		map.remove("class");
-//		return map;
-//	}
-//
-//	@Override
-//	public String toString() {
-//		return JSON.serialize(asMap());
-//	}
 
 	public String getId() {
 		return id;

@@ -1,7 +1,6 @@
 package com.segal.mongorest.example.controller;
 
 import com.segal.mongorest.core.service.CrudService;
-import com.segal.mongorest.example.pojo.Author;
 import com.segal.mongorest.example.pojo.Book;
 import com.segal.mongorest.web.rest.DocumentController;
 import org.springframework.beans.factory.annotation.Autowired;

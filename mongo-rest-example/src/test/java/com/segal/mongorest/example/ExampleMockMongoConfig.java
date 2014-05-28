@@ -3,11 +3,7 @@ package com.segal.mongorest.example;
 import com.mongodb.MongoOptions;
 import com.segal.mongorest.core.MongoConfig;
 import com.segal.mongorest.core.annotation.DocumentType;
-import com.segal.mongorest.core.pojo.BaseDocument;
 import com.segal.mongorest.core.service.DefaultMongoCrudService;
-import com.segal.mongorest.core.service.PersistenceListener;
-import com.segal.mongorest.core.service.PersistenceListenerManager;
-import com.segal.mongorest.core.util.DefaultTimeProvider;
 import com.segal.mongorest.core.util.TimeProvider;
 import com.segal.mongorest.example.pojo.Author;
 import com.segal.mongorest.example.pojo.Book;
@@ -20,10 +16,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.*;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.createNiceMock;
 
 /**

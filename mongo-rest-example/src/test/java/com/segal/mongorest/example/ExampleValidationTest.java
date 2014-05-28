@@ -2,7 +2,6 @@ package com.segal.mongorest.example;
 
 import com.segal.mongorest.core.DocumentValidationTest;
 import com.segal.mongorest.core.service.CrudService;
-import com.segal.mongorest.core.service.PersistenceListenerManager;
 import com.segal.mongorest.core.util.ApplicationRegistry;
 import com.segal.mongorest.example.builder.AuthorDocumentProvider;
 import com.segal.mongorest.example.builder.BookDocumentProvider;
@@ -10,15 +9,10 @@ import com.segal.mongorest.example.pojo.Author;
 import com.segal.mongorest.example.pojo.Book;
 import com.segal.mongorest.example.repository.AuthorRepository;
 import com.segal.mongorest.example.repository.BookRepository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * Created with IntelliJ IDEA.
@@ -61,7 +55,7 @@ public class ExampleValidationTest {
 	@Autowired
 	BookDocumentProvider bookDocumentBuilder;
 
-//	@Test
+	//	@Test
 	public void test() {
 		authorValidationTest = new DocumentValidationTest<>();
 		authorValidationTest.setDocumentProvider(authorDocumentBuilder);

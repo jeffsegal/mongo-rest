@@ -16,8 +16,8 @@ import java.lang.annotation.*;
 public @interface DocumentType {
 
 	/**
-  * @return the String document type to map to this class
-  */
+	 * @return the String document type to map to this class
+	 */
 	String value() default DEFAULT_TYPE;
 
 	public static final String DEFAULT_TYPE = "DEFAULT-DOCUMENT-TYPE";

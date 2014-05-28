@@ -3,15 +3,12 @@ package com.segal.mongorest.core;
 import com.segal.mongorest.core.pojo.BaseDocument;
 import com.segal.mongorest.core.service.CrudService;
 import com.segal.mongorest.core.service.PersistenceListener;
-import com.segal.mongorest.core.service.PersistenceListenerManager;
 import com.segal.mongorest.core.support.DocumentProvider;
 import com.segal.mongorest.core.support.DocumentTestResult;
 import com.segal.mongorest.core.support.InvalidDocumentTestResult;
 import com.segal.mongorest.core.support.ValidDocumentTestResult;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -67,13 +64,10 @@ public class DocumentValidationTest<T extends BaseDocument> extends EasyMockSupp
 				if (DocumentTestResult.Operation.create.equals(result.getOperation()) ||
 						DocumentTestResult.Operation.update.equals(result.getOperation())) {
 					testValidSave((ValidDocumentTestResult<T>) result);
-				}
-				else if (DocumentTestResult.Operation.find.equals(result.getOperation())) {
+				} else if (DocumentTestResult.Operation.find.equals(result.getOperation())) {
 					testValidFind((ValidDocumentTestResult<T>) result);
-				}
-				else throw new IllegalArgumentException("Unexpected Operation type: " + result.getOperation());
-			}
-			else if (result instanceof InvalidDocumentTestResult) {
+				} else throw new IllegalArgumentException("Unexpected Operation type: " + result.getOperation());
+			} else if (result instanceof InvalidDocumentTestResult) {
 				if (DocumentTestResult.Operation.create.equals(result.getOperation()) ||
 						DocumentTestResult.Operation.update.equals(result.getOperation())) {
 					try {
@@ -81,17 +75,14 @@ public class DocumentValidationTest<T extends BaseDocument> extends EasyMockSupp
 					} catch (Exception e) {
 						log.info("Received expected exception: " + e.getMessage());
 					}
-				}
-				else if (DocumentTestResult.Operation.find.equals(result.getOperation())) {
+				} else if (DocumentTestResult.Operation.find.equals(result.getOperation())) {
 					try {
 						testInvalidFind((InvalidDocumentTestResult<T>) result);
 					} catch (Exception e) {
 						log.info("Received expected exception: " + e.getMessage());
 					}
-				}
-				else throw new IllegalArgumentException("Unexpected Operation of type: " + result.getOperation());
-			}
-			else throw new IllegalArgumentException("Unexpected DocumentTestResult of type: " + result.getClass());
+				} else throw new IllegalArgumentException("Unexpected Operation of type: " + result.getOperation());
+			} else throw new IllegalArgumentException("Unexpected DocumentTestResult of type: " + result.getClass());
 		}
 	}
 
@@ -124,8 +115,7 @@ public class DocumentValidationTest<T extends BaseDocument> extends EasyMockSupp
 		if (DocumentTestResult.Operation.update.equals(result.getOperation())) {
 			result.getDocument().setId(mockId);
 			mockPersistenceListener.documentUpdated(result.getDocument());
-		}
-		else {
+		} else {
 			mockPersistenceListener.documentAdded(result.getDocument());
 		}
 		EasyMock.resetToNice(repository, service.getTimeProvider());
@@ -135,8 +125,7 @@ public class DocumentValidationTest<T extends BaseDocument> extends EasyMockSupp
 
 		if (DocumentTestResult.Operation.update.equals(result.getOperation())) {
 			service.update(result.getDocument());
-		}
-		else {
+		} else {
 			service.create(result.getDocument());
 		}
 		EasyMock.verify(mockPersistenceListener);

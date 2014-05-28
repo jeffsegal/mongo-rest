@@ -2,7 +2,6 @@ package com.segal.mongorest.example.persistence;
 
 import com.segal.mongorest.core.DocumentValidationTest;
 import com.segal.mongorest.core.service.CrudService;
-import com.segal.mongorest.core.service.PersistenceListenerManager;
 import com.segal.mongorest.core.support.DocumentProvider;
 import com.segal.mongorest.example.ExampleMockMongoConfig;
 import com.segal.mongorest.example.pojo.Book;

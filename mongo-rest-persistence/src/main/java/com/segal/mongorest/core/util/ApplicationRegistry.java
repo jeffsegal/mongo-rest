@@ -65,11 +65,9 @@ public class ApplicationRegistry extends ClasspathAndBeanScanner {
 		log.info("Mapping '" + documentType + "' to bean '" + bean.getClass().getCanonicalName() + "'");
 		if (bean instanceof CrudRepository) {
 			crudRepositoryRegistry.put(documentType, (CrudRepository<? extends BaseDocument, String>) bean);
-		}
-		else if (bean instanceof CrudService) {
+		} else if (bean instanceof CrudService) {
 			crudServiceRegistry.put(documentType, (CrudService<? extends BaseDocument>) bean);
-		}
-		else if (bean instanceof PersistenceListenerManager) {
+		} else if (bean instanceof PersistenceListenerManager) {
 			persistenceListenerManagerRegistry.put(documentType, (PersistenceListenerManager<? extends BaseDocument>) bean);
 		}
 	}

@@ -1,6 +1,5 @@
 package com.segal.mongorest.example.repository;
 
-import com.segal.mongorest.core.annotation.DocumentType;
 import com.segal.mongorest.example.pojo.Author;
 import org.springframework.data.repository.PagingAndSortingRepository;
 

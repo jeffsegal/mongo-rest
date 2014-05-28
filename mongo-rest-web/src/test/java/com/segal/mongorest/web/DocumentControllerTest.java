@@ -7,15 +7,12 @@ import com.segal.mongorest.core.service.CrudService;
 import com.segal.mongorest.core.support.DocumentProvider;
 import com.segal.mongorest.core.support.DocumentTestResult;
 import com.segal.mongorest.core.util.ApplicationRegistry;
-import com.segal.mongorest.core.util.TimeProvider;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,7 +27,6 @@ import java.lang.reflect.Type;
 import java.security.Principal;
 import java.util.Collection;
 
-import static org.easymock.EasyMock.expect;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -57,7 +53,8 @@ public class DocumentControllerTest<T extends BaseDocument> extends EasyMockSupp
 	protected Principal principal = new UsernamePasswordAuthenticationToken("joeUser", "secret");
 	protected String baseUrl;
 
-	final TypeToken<T> typeToken = new TypeToken<T>(getClass()) {};
+	final TypeToken<T> typeToken = new TypeToken<T>(getClass()) {
+	};
 	final Type type = typeToken.getType();
 
 	@PostConstruct

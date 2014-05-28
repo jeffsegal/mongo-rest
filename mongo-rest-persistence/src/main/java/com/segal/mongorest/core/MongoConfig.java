@@ -3,7 +3,6 @@ package com.segal.mongorest.core;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoOptions;
-import com.segal.mongorest.core.service.DefaultMongoCrudService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,6 @@ import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.core.MongoFactoryBean;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
-import org.springframework.data.mongodb.repository.support.MongoRepositoryFactoryBean;
-import org.springframework.data.repository.CrudRepository;
 
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLSocketFactory;

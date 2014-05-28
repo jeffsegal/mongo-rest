@@ -27,7 +27,7 @@ public class DefaultMongoCrudService<T extends BaseDocument> implements CrudServ
 	@Autowired
 	BeanValidator beanValidator;
 
-	PersistenceListenerManager<T> persistenceListenerManager= new PersistenceListenerManager<>();
+	PersistenceListenerManager<T> persistenceListenerManager = new PersistenceListenerManager<>();
 	CrudRepository<T, String> crudRepository;
 	TimeProvider timeProvider = new DefaultTimeProvider();
 
@@ -65,10 +65,9 @@ public class DefaultMongoCrudService<T extends BaseDocument> implements CrudServ
 		Set<ConstraintViolation<T>> violations = beanValidator.validate(pojo);
 
 		if (isUpdate) {
-		// Validate update constraints
+			// Validate update constraints
 			violations.addAll(beanValidator.validate(pojo, UpdateChecks.class));
-		}
-		else {
+		} else {
 			// Validate create constraints
 			violations.addAll(beanValidator.validate(pojo, CreateChecks.class));
 		}
@@ -87,13 +86,11 @@ public class DefaultMongoCrudService<T extends BaseDocument> implements CrudServ
 			T saved = crudRepository.save(pojo);
 			if (isUpdate) {
 				persistenceListenerManager.notifyDocumentUpdated(saved);
-			}
-			else {
+			} else {
 				persistenceListenerManager.notifyDocumentAdded(saved);
 			}
 			return saved;
-		}
-		else {
+		} else {
 			String message = "";
 			for (ConstraintViolation<T> violation : violations) {
 				message += violation.getPropertyPath() + " " + violation.getMessage() + ", ";

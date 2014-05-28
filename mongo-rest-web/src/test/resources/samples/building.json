@@ -1,17 +1,16 @@
-
-	{
-		"streetAddress": "address",
-		"how": "Crawl/Walk/Run",
-		"lastUpdatedMillis": 0,
-		"state": "VA",
-		"where": "Dog park across from home",
-		"city": "Arlington",
-		"who": [ "534e97f0c83f2b23c7590db9" , "534e97f0c83f2b23c7590dba"],
-		"id": "534e97f0c83f2b23c7590dbb",
-		"what": [ "Phone" , "Blankets" , "Call 9-1-1"],
-		"when": "Immediately",
-		"zipCode": "22201",
-		"satelliteImageId": "sateImageId",
-		"why": "Fire/Earthquake/etc",
-		"imageIds": [ "1" , "2"]
-	}
+{
+	"streetAddress": "address",
+	"how": "Crawl/Walk/Run",
+	"lastUpdatedMillis": 0,
+	"state": "VA",
+	"where": "Dog park across from home",
+	"city": "Arlington",
+	"who": [ "534e97f0c83f2b23c7590db9" , "534e97f0c83f2b23c7590dba"],
+	"id": "534e97f0c83f2b23c7590dbb",
+	"what": [ "Phone" , "Blankets" , "Call 9-1-1"],
+	"when": "Immediately",
+	"zipCode": "22201",
+	"satelliteImageId": "sateImageId",
+	"why": "Fire/Earthquake/etc",
+	"imageIds": [ "1" , "2"]
+}

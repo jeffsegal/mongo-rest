@@ -1,6 +1,5 @@
 package com.segal.mongorest.web.rest;
 
-//import com.stormpath.spring.web.servlet.handler.RestError;
 import com.segal.mongorest.web.exception.UnknownResourceException;
 import com.segal.mongorest.web.pojo.RestError;
 import org.apache.commons.lang.exception.ExceptionUtils;

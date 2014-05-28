@@ -1,7 +1,6 @@
 package com.segal.mongorest.core.util;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.segal.mongorest.core.annotation.DocumentType;
 import org.slf4j.Logger;
@@ -17,7 +16,6 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 
 import javax.annotation.Resource;
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -92,7 +90,7 @@ public abstract class ClasspathAndBeanScanner {
 	}
 
 	public Map<String, Map<String, Object>> getBeansWithAnnotation(Class<? extends Annotation> type,
-	                                           Predicate<Map<String, Object>> attributeFilter) {
+	                                                               Predicate<Map<String, Object>> attributeFilter) {
 		Map<String, Map<String, Object>> result = Maps.newConcurrentMap();
 		ConfigurableListableBeanFactory factory = (ConfigurableListableBeanFactory)
 				applicationContext.getAutowireCapableBeanFactory();
@@ -119,8 +117,7 @@ public abstract class ClasspathAndBeanScanner {
 		if (annotation != null) {
 			if (DocumentType.DEFAULT_TYPE.equals(annotation.value())) {
 				documentType = clazz.getSimpleName().toLowerCase();
-			}
-			else {
+			} else {
 				documentType = annotation.value();
 			}
 		}
