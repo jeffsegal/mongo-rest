@@ -5,13 +5,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>mongo-rest-persistence</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.1</version>
+	<version>0.1.0</version>
 	<name>Mongo REST :: Persistence</name>
 
 	<parent>
 		<groupId>com.segal.mongorest</groupId>
 		<artifactId>mongo-rest-parent</artifactId>
-		<version>0.0.1</version>
+		<version>0.1.0</version>
 		<relativePath>..</relativePath>
 	</parent>
 
