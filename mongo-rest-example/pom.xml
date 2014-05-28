@@ -3,13 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>mongo-rest-example</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.1</version>
+	<version>0.1.0</version>
 	<name>Mongo REST :: Example</name>
 
 	<parent>
 		<groupId>com.segal.mongorest</groupId>
 		<artifactId>mongo-rest-parent</artifactId>
-		<version>0.0.1</version>
+		<version>0.1.0</version>
 		<relativePath>..</relativePath>
 	</parent>
 

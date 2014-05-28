@@ -6,7 +6,7 @@
 	<groupId>com.segal.mongorest</groupId>
 	<artifactId>mongo-rest-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>0.0.1</version>
+	<version>0.1.0</version>
 	<name>Mongo REST :: Parent</name>
 
 	<properties>
