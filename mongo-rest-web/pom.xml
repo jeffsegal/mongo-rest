@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>com.segal.mongorest</groupId>
 			<artifactId>mongo-rest-persistence</artifactId>
-			<version>0.0.1</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 
 		<dependency>
@@ -50,11 +50,11 @@
 			<artifactId>spring-security-ldap</artifactId>
 			<version>${spring-security.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>com.stormpath.blog</groupId>
-			<artifactId>spring-mvc-rest-exhandler</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
+		<!--<dependency>-->
+		<!--<groupId>com.stormpath.blog</groupId>-->
+		<!--<artifactId>spring-mvc-rest-exhandler</artifactId>-->
+		<!--<version>1.0.0-SNAPSHOT</version>-->
+		<!--</dependency>-->
 		<dependency>
 			<groupId>org.apache.geronimo.specs</groupId>
 			<artifactId>geronimo-servlet_3.0_spec</artifactId>
