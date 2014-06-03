@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
  * To change this template use File | Settings | File Templates.
  */
 @Configuration
-public class MockRepositoryConfig extends EasyMockSupport {
+public class ExampleMockRepositoryConfig extends EasyMockSupport {
 
 	@Bean
 	@DocumentType("author")

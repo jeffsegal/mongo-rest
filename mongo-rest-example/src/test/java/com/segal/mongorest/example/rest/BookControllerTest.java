@@ -2,6 +2,7 @@ package com.segal.mongorest.example.rest;
 
 import com.segal.mongorest.core.service.CrudService;
 import com.segal.mongorest.core.support.DocumentProvider;
+import com.segal.mongorest.example.ExampleMockApplicationConfigExample;
 import com.segal.mongorest.example.ExampleMockRestConfig;
 import com.segal.mongorest.example.pojo.Book;
 import com.segal.mongorest.web.DocumentControllerTest;
@@ -21,7 +22,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = ExampleMockRestConfig.class)
+@ContextConfiguration(classes = {ExampleMockApplicationConfigExample.class, ExampleMockRestConfig.class})
 public class BookControllerTest extends DocumentControllerTest<Book> {
 
 	@Override

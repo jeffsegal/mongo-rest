@@ -10,7 +10,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,15 +20,13 @@ import java.util.Date;
  */
 @Component
 @DocumentType("book")
-public class BookControllerDocumentProvider implements DocumentProvider<Book> {
+public class BookControllerDocumentProvider extends ExampleDocumentProviderSupport implements DocumentProvider<Book> {
 
 	@Override
 	public Collection<DocumentTestResult<Book>> createDocuments() {
-		Book validBook = new Book("title", "isbn", "publisher", new Date());
-		DocumentTestResult<Book> validResult = new RestServiceResult<>(validBook, DocumentTestResult.Operation.create,
+		DocumentTestResult<Book> validResult = new RestServiceResult<>(catsCradle, DocumentTestResult.Operation.create,
 				MockMvcResultMatchers.status().isOk());
 
-		Book invalidBook = new Book(null, "isbn", "publisher", null);
 		DocumentTestResult<Book> invalidResult = new RestServiceResult<>(invalidBook, DocumentTestResult.Operation.create,
 				MockMvcResultMatchers.status().is4xxClientError());
 

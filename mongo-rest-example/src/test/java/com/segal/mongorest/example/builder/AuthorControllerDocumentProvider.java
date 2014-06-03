@@ -12,7 +12,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,25 +22,20 @@ import java.util.Date;
  */
 @Component
 @DocumentType("author")
-public class AuthorControllerDocumentProvider implements DocumentProvider<Author> {
+public class AuthorControllerDocumentProvider extends ExampleDocumentProviderSupport implements DocumentProvider<Author> {
 
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Override
 	public Collection<DocumentTestResult<Author>> createDocuments() {
-		Author validAuthor = new Author("first", "middle", "last", new Date(
-				new Date().getTime() - 1000L * 60 * 60 * 24 * 365 * 50), null);
-		DocumentTestResult<Author> validCreate = new RestServiceResult<>(validAuthor, DocumentTestResult.Operation.create,
+		DocumentTestResult<Author> validCreate = new RestServiceResult<>(kurtVonnegut, DocumentTestResult.Operation.create,
 				MockMvcResultMatchers.status().isOk());
-
-		Author invalidAuthor = new Author(null, "middle", null, new Date(
-				new Date().getTime() - 1000L * 60 * 60 * 24 * 365 * 50), null);
 		DocumentTestResult<Author> invalidCreate = new RestServiceResult<>(invalidAuthor, DocumentTestResult.Operation.create,
 				MockMvcResultMatchers.status().is4xxClientError());
 
 		Author clonedAuthor = null;
 		try {
-			clonedAuthor = (Author) validAuthor.clone();
+			clonedAuthor = (Author) kurtVonnegut.clone();
 			clonedAuthor.setId("1234");
 		} catch (CloneNotSupportedException e) {
 			log.warn("Error while cloning author.", e);

@@ -22,7 +22,7 @@ import java.util.Date;
  */
 @Component
 @DocumentType("book")
-public class BookDocumentProvider implements DocumentProvider<Book> {
+public class BookDocumentProvider extends ExampleDocumentProviderSupport implements DocumentProvider<Book> {
 
 	@Override
 	public Collection<DocumentTestResult<Book>> createDocuments() {

@@ -3,7 +3,7 @@ package com.segal.mongorest.example.persistence;
 import com.segal.mongorest.core.DocumentValidationTest;
 import com.segal.mongorest.core.service.CrudService;
 import com.segal.mongorest.core.support.DocumentProvider;
-import com.segal.mongorest.example.ExampleMockMongoConfig;
+import com.segal.mongorest.example.ExampleMockApplicationConfigExample;
 import com.segal.mongorest.example.pojo.Author;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * To change this template use File | Settings | File Templates.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ExampleMockMongoConfig.class)
+@ContextConfiguration(classes = ExampleMockApplicationConfigExample.class)
 @DirtiesContext
 public class AuthorValidationTest extends DocumentValidationTest<Author> {
 

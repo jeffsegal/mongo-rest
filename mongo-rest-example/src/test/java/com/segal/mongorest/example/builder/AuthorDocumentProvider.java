@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,29 +23,26 @@ import java.util.Date;
  */
 @Component
 @DocumentType("author")
-public class AuthorDocumentProvider implements DocumentProvider<Author> {
+public class AuthorDocumentProvider extends ExampleDocumentProviderSupport implements DocumentProvider<Author> {
 
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Override
 	public Collection<DocumentTestResult<Author>> createDocuments() {
-		Author validAuthor = new Author("first", "middle", "last", new Date(
-				new Date().getTime() - 1000L * 60 * 60 * 24 * 365 * 50), null);
-		DocumentTestResult<Author> validResult = new ValidDocumentTestResult<>(validAuthor, DocumentTestResult.Operation.create);
+		DocumentTestResult<Author> validResult = new ValidDocumentTestResult<>(kurtVonnegut, DocumentTestResult.Operation.create);
 
-		Author invalidAuthor = new Author(null, "middle", null, null, new Date());
 		InvalidDocumentTestResult<Author> invalidResult = new InvalidDocumentTestResult<>(invalidAuthor,
 				DocumentTestResult.Operation.create, ConstraintViolationException.class);
 
 		Author clonedAuthor = null;
 		try {
-			clonedAuthor = (Author) validAuthor.clone();
+			clonedAuthor = (Author) kurtVonnegut.clone();
 			clonedAuthor.setId("1234");
 		} catch (CloneNotSupportedException e) {
 			log.warn("Error while cloning author.", e);
 		}
 
-		DocumentTestResult<Author> anotherValidResult = new ValidDocumentTestResult<>(validAuthor,
+		DocumentTestResult<Author> anotherValidResult = new ValidDocumentTestResult<>(kurtVonnegut,
 				DocumentTestResult.Operation.create);
 
 		ValidDocumentTestResult<Author> validFind = new ValidDocumentTestResult<>(clonedAuthor,
