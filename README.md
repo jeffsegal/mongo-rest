@@ -3,7 +3,7 @@ mongo-rest
 
 A simple library meant to reduce boilerplate code required to set up a RESTful interface in front of a MongoDB database.
 
-See mongo-rest-example for usage examples of how to create POJOs, Repositories, Controllers and classes necessary for testing basic functionality.
+See mongo-rest-example for usage examples of how to create POJOs, Repositories, Controllers and classes necessary for testing basic functionality. Run the package phase of mongo-rest-example to build a fully the web app which can be deployed to any Servlet container. The only external dependency is a running MongoDB server (see application.properties for the example app's MongoDB connection configuratoin).
 
 ###POJOs
 Here's how we might represent an author (constructors, getters and setters omitted):
