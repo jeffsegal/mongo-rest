@@ -10,7 +10,7 @@
 		<file>logs/mongo-rest-example.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- daily rollover -->
-			<fileNamePattern>workaid-webapp.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<fileNamePattern>mongo-rest-example.%d{yyyy-MM-dd}.log</fileNamePattern>
 			<maxHistory>30</maxHistory>
 		</rollingPolicy>
 
