@@ -22,14 +22,14 @@ import java.util.*;
  */
 public class DefaultMongoCrudService<T extends BaseDocument> implements CrudService<T> {
 
-	Logger log = LoggerFactory.getLogger(this.getClass());
+	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	BeanValidator beanValidator;
+	protected BeanValidator beanValidator;
 
-	PersistenceListenerManager<T> persistenceListenerManager = new PersistenceListenerManager<>();
-	CrudRepository<T, String> crudRepository;
-	TimeProvider timeProvider = new DefaultTimeProvider();
+	protected PersistenceListenerManager<T> persistenceListenerManager = new PersistenceListenerManager<>();
+	protected CrudRepository<T, String> crudRepository;
+	protected TimeProvider timeProvider = new DefaultTimeProvider();
 
 	public DefaultMongoCrudService() {
 	}

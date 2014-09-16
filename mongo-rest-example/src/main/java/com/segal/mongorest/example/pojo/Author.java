@@ -2,7 +2,7 @@ package com.segal.mongorest.example.pojo;
 
 import com.segal.mongorest.core.annotation.DocumentType;
 import com.segal.mongorest.core.pojo.BaseDocument;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -114,13 +114,7 @@ public class Author extends BaseDocument {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this)
-				.append("firstName", firstName)
-				.append("middleName", middleName)
-				.append("lastName", lastName)
-				.append("birthDate", birthDate)
-				.append("deathDate", deathDate)
-				.toString();
+		return ToStringBuilder.reflectionToString(this);
 	}
 
 	@Override

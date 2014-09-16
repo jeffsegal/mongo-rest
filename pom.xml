@@ -12,8 +12,8 @@
 	<properties>
 		<mongodb.version>2.6.0</mongodb.version>
 		<springframework.version>4.0.3.RELEASE</springframework.version>
-		<spring-security.version>3.2.3.RELEASE</spring-security.version>
-		<spring-data-mongodb.version>1.4.1.RELEASE</spring-data-mongodb.version>
+		<spring-security.version>4.0.0.CI-SNAPSHOT</spring-security.version>
+		<spring-data-mongodb.version>1.6.0.RELEASE</spring-data-mongodb.version>
 	</properties>
 
 	<modules>
@@ -87,7 +87,6 @@
 
 			</plugins>
 		</pluginManagement>
-
 	</build>
 
 </project>

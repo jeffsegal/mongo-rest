@@ -40,16 +40,6 @@
 			<artifactId>spring-security-web</artifactId>
 			<version>${spring-security.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-config</artifactId>
-			<version>${spring-security.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-ldap</artifactId>
-			<version>${spring-security.version}</version>
-		</dependency>
 		<!--<dependency>-->
 		<!--<groupId>com.stormpath.blog</groupId>-->
 		<!--<artifactId>spring-mvc-rest-exhandler</artifactId>-->
@@ -140,7 +130,7 @@
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
+		    <artifactId>maven-source-plugin</artifactId>
 			</plugin>
 
 		</plugins>

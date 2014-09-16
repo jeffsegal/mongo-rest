@@ -2,7 +2,7 @@ package com.segal.mongorest.example.pojo;
 
 import com.segal.mongorest.core.annotation.DocumentType;
 import com.segal.mongorest.core.pojo.BaseDocument;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -100,12 +100,7 @@ public class Book extends BaseDocument {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this)
-				.append("title", title)
-				.append("isbn", isbn)
-				.append("publisher", publisher)
-				.append("publicationDate", publicationDate)
-				.toString();
+		return ToStringBuilder.reflectionToString(this);
 	}
 
 }

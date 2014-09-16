@@ -2,7 +2,7 @@ package com.segal.mongorest.web.rest;
 
 import com.segal.mongorest.web.exception.UnknownResourceException;
 import com.segal.mongorest.web.pojo.RestError;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.annotation.PostConstruct;
 import javax.validation.ConstraintViolationException;
 import java.net.ConnectException;
 
@@ -27,6 +28,11 @@ import java.net.ConnectException;
 public class ControllerAdviceExceptionHandler extends ResponseEntityExceptionHandler {
 
 	Logger log = LoggerFactory.getLogger(this.getClass());
+
+	@PostConstruct
+	public void init() {
+		log.info("Initializing '" + this.getClass() + "'");
+	}
 
 	@ExceptionHandler({ConstraintViolationException.class})
 	protected ResponseEntity<Object> handleConstraintViolation(RuntimeException e, WebRequest request) {

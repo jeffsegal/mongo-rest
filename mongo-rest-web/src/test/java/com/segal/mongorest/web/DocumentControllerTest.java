@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -39,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class DocumentControllerTest<T extends BaseDocument> extends EasyMockSupport {
 
-	Logger log = LoggerFactory.getLogger(this.getClass());
+	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	protected ApplicationRegistry applicationRegistry;
@@ -52,6 +53,7 @@ public class DocumentControllerTest<T extends BaseDocument> extends EasyMockSupp
 	protected MockMvc mockMvc;
 	protected Principal principal = new UsernamePasswordAuthenticationToken("joeUser", "secret");
 	protected String baseUrl;
+	protected boolean enforceAssertions = true;
 
 	final TypeToken<T> typeToken = new TypeToken<T>(getClass()) {
 	};
@@ -74,10 +76,10 @@ public class DocumentControllerTest<T extends BaseDocument> extends EasyMockSupp
 	public void test() throws Exception {
 		String url = baseUrl + "/test";
 		log.info("Executing request against URL '" + url + "'");
-		MvcResult result = this.mockMvc.perform(get(url)
-				.principal(principal))
-				.andExpect(status().isOk())
-				.andReturn();
+		ResultActions resultActions = this.mockMvc.perform(get(url)
+				.principal(principal));
+		if (enforceAssertions) resultActions = resultActions.andExpect(status().isOk());
+		MvcResult result = resultActions.andReturn();
 		log.debug(result.getResponse().getContentAsString());
 	}
 
@@ -121,12 +123,13 @@ public class DocumentControllerTest<T extends BaseDocument> extends EasyMockSupp
 	protected void doSave(MockHttpServletRequestBuilder builder, T document, ResultMatcher resultMatcher) throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(document);
-		MvcResult result = this.mockMvc.perform(builder
+		ResultActions resultActions = this.mockMvc.perform(builder
 				.principal(principal)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
-				.andExpect(resultMatcher)
-				.andReturn();
+				.content(json)
+		);
+		if (enforceAssertions) resultActions = resultActions.andExpect(resultMatcher);
+		MvcResult result = resultActions.andReturn();
 		log.info("Executed request against URL '" + result.getRequest().getPathInfo() + "'");
 		log.debug("Response: " + result.getResponse().getContentAsString());
 	}
@@ -138,11 +141,12 @@ public class DocumentControllerTest<T extends BaseDocument> extends EasyMockSupp
 		EasyMock.expect(crudService.getCrudRepository().findOne((id))).andReturn(document).anyTimes();
 		EasyMock.replay(crudService.getCrudRepository());
 
-		MvcResult result = this.mockMvc.perform(get(url)
+		ResultActions resultActions = this.mockMvc.perform(get(url)
 				.principal(principal)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(resultMatcher)
-				.andReturn();
+				.accept(MediaType.APPLICATION_JSON)
+		);
+		if (enforceAssertions) resultActions = resultActions.andExpect(resultMatcher);
+		MvcResult result = resultActions.andReturn();
 		log.debug("Response: " + result.getResponse().getContentAsString());
 		EasyMock.verify(crudService.getCrudRepository());
 	}
@@ -161,5 +165,9 @@ public class DocumentControllerTest<T extends BaseDocument> extends EasyMockSupp
 
 	public void setPrincipal(Principal principal) {
 		this.principal = principal;
+	}
+
+	public void setEnforceAssertions(boolean enforceAssertions) {
+		this.enforceAssertions = enforceAssertions;
 	}
 }

@@ -3,7 +3,6 @@ package com.segal.mongorest.core.service;
 import com.segal.mongorest.core.pojo.BaseDocument;
 import com.segal.mongorest.core.util.TimeProvider;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Collection;
 
@@ -18,7 +17,6 @@ public interface CrudService<T extends BaseDocument> {
 
 	public static final String ROLE_PREFIX = "ROLE_";
 
-	@PreAuthorize("hasPermission('" + ROLE_PREFIX + "USER')")
 	public T create(T pojo);
 
 	public T update(T pojo);

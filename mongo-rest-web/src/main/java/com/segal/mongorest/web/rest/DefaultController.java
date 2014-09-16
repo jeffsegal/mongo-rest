@@ -16,10 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class DefaultController {
 
-	@RequestMapping("/**")
-	public void unmappedRequest(HttpServletRequest request) {
-		String uri = request.getRequestURI();
-		throw new UnknownResourceException("There is no resource for path " + uri);
-	}
+//	@RequestMapping("/**")
+//	public void unmappedRequest(HttpServletRequest request) {
+//		String uri = request.getRequestURI();
+//		throw new UnknownResourceException("There is no resource for path " + uri);
+//	}
 
 }
