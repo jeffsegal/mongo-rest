@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class TestRegistry extends ClasspathAndBeanScanner {
 
-	Map<String, Collection<DocumentProvider<? extends BaseDocument>>> documentBuilderRegistry = new ConcurrentHashMap<>();
+	Map<String, DocumentProvider<? extends BaseDocument>> documentBuilderRegistry = new ConcurrentHashMap<>();
 
 	public TestRegistry() {
 	}
@@ -37,14 +37,11 @@ public class TestRegistry extends ClasspathAndBeanScanner {
 	@Override
 	public void handleBeanEntry(Object bean, String documentType) {
 		if (bean instanceof DocumentProvider) {
-			Collection<DocumentProvider<? extends BaseDocument>> documentProviders = documentBuilderRegistry.get(documentType);
-			if (documentProviders == null) documentProviders = new ArrayList<>();
-			documentProviders.add((DocumentProvider<? extends BaseDocument>) bean);
-			documentBuilderRegistry.put(documentType, documentProviders);
+			documentBuilderRegistry.put(documentType, (DocumentProvider<? extends BaseDocument>) bean);
 		}
 	}
 
-	public Collection<DocumentProvider<? extends BaseDocument>> getDocumentBuilders(String documentType) {
+	public DocumentProvider<? extends BaseDocument> getDocumentBuilder(String documentType) {
 		return documentBuilderRegistry.get(documentType);
 	}
 

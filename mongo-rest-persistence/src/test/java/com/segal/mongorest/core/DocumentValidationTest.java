@@ -1,12 +1,11 @@
 package com.segal.mongorest.core;
 
+import com.google.common.reflect.TypeToken;
 import com.segal.mongorest.core.pojo.BaseDocument;
 import com.segal.mongorest.core.service.CrudService;
 import com.segal.mongorest.core.service.PersistenceListener;
-import com.segal.mongorest.core.support.DocumentProvider;
-import com.segal.mongorest.core.support.DocumentTestResult;
-import com.segal.mongorest.core.support.InvalidDocumentTestResult;
-import com.segal.mongorest.core.support.ValidDocumentTestResult;
+import com.segal.mongorest.core.support.*;
+import com.segal.mongorest.core.util.ApplicationRegistry;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Rule;
@@ -14,9 +13,11 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.annotation.PostConstruct;
+import java.lang.reflect.Type;
 
 //import static org.easymock.EasyMock.*;
 
@@ -36,18 +37,25 @@ public class DocumentValidationTest<T extends BaseDocument> extends EasyMockSupp
 	protected CrudService<T> service;
 	protected DocumentProvider<T> documentProvider;
 
-	public DocumentValidationTest() {
-	}
+	@Autowired
+	protected ApplicationRegistry applicationRegistry;
 
-	public DocumentValidationTest(CrudRepository<T, String> repository, CrudService<T> service,
-	                              DocumentProvider<T> documentProvider) {
-		this.repository = repository;
-		this.service = service;
-		this.documentProvider = documentProvider;
+	@Autowired
+	protected TestRegistry testRegistry;
+
+	private final TypeToken<T> typeToken = new TypeToken<T>(getClass()) { };
+  private final Type type = typeToken.getType();
+
+	public DocumentValidationTest() {
 	}
 
 	@PostConstruct
 	public void init() {
+		String documentType = applicationRegistry.getDocumentType((Class) type);
+		this.repository = (CrudRepository<T, String>) applicationRegistry.getCrudRepository((Class) type);
+		this.service = (CrudService<T>) applicationRegistry.getCrudService((Class) type);
+		this.documentProvider = (DocumentProvider<T>) testRegistry.getDocumentBuilder(documentType);
+
 		log.info("Initializing TimeProvider mocks...");
 		EasyMock.resetToNice(service.getTimeProvider());
 		EasyMock.expect(service.getTimeProvider().getSystemTimeMillis()).andStubReturn(1000L);

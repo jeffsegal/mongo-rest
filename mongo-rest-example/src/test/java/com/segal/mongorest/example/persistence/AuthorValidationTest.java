@@ -25,26 +25,4 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @DirtiesContext
 public class AuthorValidationTest extends DocumentValidationTest<Author> {
 
-	@Override
-	@Autowired
-	@Qualifier("authorRepository")
-	public void setRepository(CrudRepository repository) {
-		super.setRepository(repository);
-	}
-
-	@Override
-	@Autowired
-	@Qualifier("authorService")
-	public void setService(CrudService<Author> service) {
-		super.setService(service);
-	}
-
-	@Override
-	@Autowired
-	@Qualifier("authorDocumentProvider")
-	public void setDocumentProvider(DocumentProvider<Author> documentProvider) {
-		super.setDocumentProvider(documentProvider);
-	}
-
-
 }

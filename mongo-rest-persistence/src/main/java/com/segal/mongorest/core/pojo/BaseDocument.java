@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Null;
 import java.io.Serializable;
 
@@ -22,9 +23,13 @@ public abstract class BaseDocument implements Cloneable, Serializable {
 
 	private static final long serialVersionUID = -6777426265591642262L;
 
+	@Min(0)
 	protected long createdMillis;
 
+	@Min(0)
 	protected long lastUpdatedMillis;
+
+	protected String owner;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,6 +61,14 @@ public abstract class BaseDocument implements Cloneable, Serializable {
 		this.lastUpdatedMillis = lastUpdatedMillis;
 	}
 
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
@@ -63,10 +76,7 @@ public abstract class BaseDocument implements Cloneable, Serializable {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this)
-				.append("createdMillis", createdMillis)
-				.append("lastUpdatedMillis", lastUpdatedMillis)
-				.append("id", id)
-				.toString();
+		return ToStringBuilder.reflectionToString(this);
 	}
+
 }

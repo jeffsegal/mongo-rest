@@ -42,13 +42,6 @@ public class ApplicationRegistry extends ClasspathAndBeanScanner {
 		super(packages);
 	}
 
-	@PostConstruct
-	public void init() {
-		log.info("Initializing " + this.getClass() + "...");
-		scanBeans();
-		scanClassPath();
-	}
-
 	@Override
 	public void handleClasspathEntry(Class clazz, String documentType) {
 		log.trace("Looking for '" + DocumentType.class + "' annotation on class '" +
@@ -80,8 +73,24 @@ public class ApplicationRegistry extends ClasspathAndBeanScanner {
 		return documentRegistry.inverse().get(clazz);
 	}
 
+	public CrudRepository<? extends BaseDocument, String> getCrudRepository(Class clazz) {
+		String documentType = getDocumentType(clazz);
+		if (clazz != null) {
+			return getCrudRepository(documentType);
+		}
+		else return null;
+	}
+
 	public CrudRepository<? extends BaseDocument, String> getCrudRepository(String documentType) {
 		return crudRepositoryRegistry.get(documentType);
+	}
+
+	public CrudService<? extends BaseDocument> getCrudService(Class clazz) {
+		String documentType = getDocumentType(clazz);
+		if (clazz != null) {
+			return getCrudService(documentType);
+		}
+		else return null;
 	}
 
 	public CrudService<? extends BaseDocument> getCrudService(String documentType) {

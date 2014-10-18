@@ -25,25 +25,4 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @DirtiesContext
 public class BookValidationTest extends DocumentValidationTest<Book> {
 
-	@Override
-	@Autowired
-	@Qualifier("bookRepository")
-	public void setRepository(CrudRepository repository) {
-		super.setRepository(repository);
-	}
-
-	@Override
-	@Autowired
-	@Qualifier("bookService")
-	public void setService(CrudService<Book> service) {
-		super.setService(service);
-	}
-
-	@Override
-	@Autowired
-	@Qualifier("bookDocumentProvider")
-	public void setDocumentProvider(DocumentProvider<Book> documentProvider) {
-		super.setDocumentProvider(documentProvider);
-	}
-
 }

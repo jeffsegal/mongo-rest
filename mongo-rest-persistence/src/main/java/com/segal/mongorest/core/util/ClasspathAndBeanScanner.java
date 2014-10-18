@@ -14,6 +14,7 @@ import org.springframework.context.annotation.ClassPathScanningCandidateComponen
 import org.springframework.core.type.StandardMethodMetadata;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -28,7 +29,7 @@ import java.util.Map;
  */
 public abstract class ClasspathAndBeanScanner {
 
-	Logger log = LoggerFactory.getLogger(this.getClass());
+	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Resource
 	@Qualifier("classpathToScan")
@@ -46,6 +47,13 @@ public abstract class ClasspathAndBeanScanner {
 
 	protected ClasspathAndBeanScanner(List<String> packages) {
 		this.packages = packages;
+	}
+
+	@PostConstruct
+	public void init() {
+		log.info("Initializing " + this.getClass() + "...");
+		scanBeans();
+		scanClassPath();
 	}
 
 	protected void scanClassPath() {
